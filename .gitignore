@@ -1,5 +1,6 @@
 build/linux/codeblocks
 build/linux/codelite
+build/linux/gmake/obj
 bin/
 
 .vscode
