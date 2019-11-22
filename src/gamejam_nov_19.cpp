@@ -22,7 +22,7 @@ orxSTATUS orxFASTCALL Init()
     orxViewport_CreateFromConfig("Viewport");
 
     // Create the object
-    orxObject_CreateFromConfig("Object");
+    orxObject_CreateFromConfig("GeneralBarkObject");
 
     // Done!
     return orxSTATUS_SUCCESS;
