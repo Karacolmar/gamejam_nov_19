@@ -5,6 +5,18 @@
 
 #include "orx.h"
 
+
+class Player {
+    public:
+    orxOBJECT* object;
+    orxVECTOR left_speed = {-20, 0, 0};
+    orxVECTOR right_speed = {20, 0, 0};
+    orxVECTOR up_speed = {0, -20, 0};
+    orxVECTOR down_speed = {0, 20, 0};
+};
+
+Player player;
+
 /*
  * This is a basic code template to quickly and easily get started with a project or tutorial.
  */
@@ -22,7 +34,7 @@ orxSTATUS orxFASTCALL Init()
     orxViewport_CreateFromConfig("Viewport");
 
     // Create the object
-    orxObject_CreateFromConfig("GeneralBarkObject");
+    player.object = orxObject_CreateFromConfig("PlayerObject");
 
     // Done!
     return orxSTATUS_SUCCESS;
@@ -39,6 +51,26 @@ orxSTATUS orxFASTCALL Run()
     {
         // Update result
         eResult = orxSTATUS_FAILURE;
+    }
+
+    if(orxInput_IsActive("GoLeft"))
+    {
+        orxObject_ApplyImpulse(player.object, &player.left_speed, orxNULL);
+    }
+
+    if(orxInput_IsActive("GoRight"))
+    {
+        orxObject_ApplyImpulse(player.object, &player.right_speed, orxNULL);
+    }
+
+    if(orxInput_IsActive("GoUp"))
+    {
+        orxObject_ApplyImpulse(player.object, &player.up_speed, orxNULL);
+    }
+
+    if(orxInput_IsActive("GoDown"))
+    {
+        orxObject_ApplyImpulse(player.object, &player.down_speed, orxNULL);
     }
 
     // Done!
