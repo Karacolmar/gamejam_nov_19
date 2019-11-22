@@ -5,6 +5,12 @@
 
 #include "orx.h"
 
+#define STATE_MENU 0
+#define STATE_PLAYING 1
+#define STATE_SHOP 2
+#define STATE_GAME_OVER 3
+
+int gamestate = 0;
 
 class Player {
     public:
@@ -30,29 +36,21 @@ orxSTATUS orxFASTCALL Init()
     "\n* You can play with the config parameters in ../data/config/gamejam_nov_19.ini"
     "\n* After changing them, relaunch the executable to see the changes.");
 
-    // Create the viewport
-    orxViewport_CreateFromConfig("Viewport");
+    if(gamestate == STATE_MENU){
+        // Create the viewport
+        orxViewport_CreateFromConfig("Viewport");
 
-    // Create the object
-    player.object = orxObject_CreateFromConfig("PlayerObject");
+        // Create the object
+        player.object = orxObject_CreateFromConfig("PlayerObject");
+    }
+
 
     // Done!
     return orxSTATUS_SUCCESS;
 }
 
-/** Run function, it is called every clock cycle
- */
-orxSTATUS orxFASTCALL Run()
+void handleKeyboardInput()
 {
-    orxSTATUS eResult = orxSTATUS_SUCCESS;
-
-    // Should quit?
-    if(orxInput_IsActive("Quit"))
-    {
-        // Update result
-        eResult = orxSTATUS_FAILURE;
-    }
-
     if(orxInput_IsActive("GoLeft"))
     {
         orxObject_ApplyImpulse(player.object, &player.left_speed, orxNULL);
@@ -72,6 +70,31 @@ orxSTATUS orxFASTCALL Run()
     {
         orxObject_ApplyImpulse(player.object, &player.down_speed, orxNULL);
     }
+
+}
+
+/** Run function, it is called every clock cycle
+ */
+orxSTATUS orxFASTCALL Run()
+{
+    orxSTATUS eResult = orxSTATUS_SUCCESS;
+        // Should quit?
+    if(orxInput_IsActive("Quit"))
+    {
+        // Update result
+        eResult = orxSTATUS_FAILURE;
+    }
+    /*
+    switch(gamestate)
+    {
+        case STATE_MENU:
+        case STATE_SHOP:
+        case STATE_PLAYING:
+        case STATE_GAME_OVER:
+        default: 
+    }*/
+
+    handleKeyboardInput();    
 
     // Done!
     return eResult;
