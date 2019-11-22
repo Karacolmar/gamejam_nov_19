@@ -9,10 +9,10 @@
 class Player {
     public:
     orxOBJECT* object;
-    orxVECTOR left_speed = {-20, 0, 0};
-    orxVECTOR right_speed = {20, 0, 0};
-    orxVECTOR up_speed = {0, -20, 0};
-    orxVECTOR down_speed = {0, 20, 0};
+    orxVECTOR left_speed = {-10, 0, 0};
+    orxVECTOR right_speed = {10, 0, 0};
+    orxVECTOR up_speed = {0, -10, 0};
+    orxVECTOR down_speed = {0, 10, 0};
 };
 
 Player player;
