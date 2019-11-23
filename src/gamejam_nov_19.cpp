@@ -12,7 +12,7 @@
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 
-int gamestate = 1;
+int gamestate = 0;
 
 Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1;
@@ -109,6 +109,35 @@ void handleMenuInput()
         {
             orxLOG("Exit Button Klick"); // DO Stuff
         }
+
+        orxOBJECT *object = orxNULL;
+     
+        // Let's fetch the mouse's position
+        orxVECTOR vPos;
+        if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vPos), orxNULL, &vPos) != orxNULL)
+        { 
+            // Let's see what's currently under the mouse
+            orxLOG("Irgendwas gefunden!!!");
+
+            object = orxObject_Pick(&vPos, orxString_GetID("UI"));
+            orxLOG(orxObject_GetName(object));
+        }
+        if(object && (orxInput_HasBeenActivated("LeftClick")))
+        {
+            // He clicked...so let's start the game if it was the PlayButton
+            if(orxString_Compare(orxObject_GetName(object),"PlayButton") == 0)
+            {
+                //INSERT SOME CODE THAT STARTS YOUR GAME
+                orxLOG("PlayButton geklcikt");
+                gamestate = 1;
+            }
+            else if(orxString_Compare(orxObject_GetName(object),"OtherButton") == 0)
+            {
+                //DO OTHER STUFF FOR OTHER BUTTONS
+            }
+    }
+
+
     }
 
 //orxLOG("Handle Menu Input fertitg");
@@ -120,6 +149,7 @@ orxOBJECT* highlighted_button = orxNULL;
  
 void orxFASTCALL Update(const orxCLOCK_INFO *_pstClockInfo, void *_pstContext)
 {
+    orxLOG("update aufgerufen");
     //current Button under mouse
     orxOBJECT *object = orxNULL;
  
