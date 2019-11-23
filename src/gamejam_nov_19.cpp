@@ -62,10 +62,22 @@ void handleLevelInput()
 void handleMenuInput()
 {
     orxVECTOR pos;
-    if (orxInput_IsActive("LeftClick") == orxTRUE){
+    if (orxInput_IsActive("LeftClick") && orxInput_HasNewStatus("LeftClick")){
         orxLOG("LeftClick"); // DO Stuff
         orxMouse_GetPosition(&pos);
     }
+
+
+    if(orxOBox_IsInside("ExitButton", &pos))
+    {
+          orxLOG("JAAAAAAAAA"); // DO Stuff
+    }   
+
+
+
+
+
+
 
 }
 
