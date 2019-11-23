@@ -13,7 +13,11 @@ class Player {
     
     public:
     Player(orxOBJECT* obj, float speed, float minus_speed);
-    orxOBJECT* getObject() {return object;}
+    orxOBJECT* get_object() {return object;}
+    orxVECTOR get_left() {return left_speed;}
+    orxVECTOR get_right() {return right_speed;}
+    orxVECTOR get_up() {return up_speed;}
+    orxVECTOR get_down() {return down_speed;} 
     void move(char direction);
 };
 
