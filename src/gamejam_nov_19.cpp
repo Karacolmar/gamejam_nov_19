@@ -11,6 +11,7 @@
 #define STATE_PLAYING 1
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
+#define STATE_CREDITS 4
 
 int gamestate = 1;
 
@@ -19,16 +20,8 @@ orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *lev
 
 
 orxOBOX boundingBox;
-/*
- * This is a basic code template to quickly and easily get started with a project or tutorial.
- */
-
-/** Init function, it is called when all orx's modules have been initialized
- */
-orxSTATUS orxFASTCALL Init()
+void startMenu()
 {
-    
-    //orxLOG("Init aufgerufen");
     if(gamestate == STATE_MENU)
     {
         // Create the viewport
@@ -45,9 +38,13 @@ orxSTATUS orxFASTCALL Init()
         //orxLOG(orxObject_GetName(optionenButton));
         //orxLOG(orxObject_GetName(creditsButton));
         //orxLOG(orxObject_GetName(playButton));
-
     }
-    else if(gamestate == STATE_PLAYING)
+
+}
+
+void startGame()
+{
+    if(gamestate == STATE_PLAYING)
     {
         // Create the viewport
         orxViewport_CreateFromConfig("Viewport");
@@ -61,9 +58,46 @@ orxSTATUS orxFASTCALL Init()
         //orxObject_CreateFromConfig("SheepObject");
     }
 
+}
+
+void startCredits()
+{
+}
+
+void startOptions()
+{}
+
+
+
+/*
+ * This is a basic code template to quickly and easily get started with a project or tutorial.
+ */
+
+/** Init function, it is called when all orx's modules have been initialized
+ */
+orxSTATUS orxFASTCALL Init()
+{   
+    switch(gamestate)
+    {
+        case STATE_MENU: 
+            startMenu();
+            break;
+        //case STATE_OPTIONS:
+        case STATE_PLAYING: 
+            startGame();
+            break;
+        //case STATE_GAME_OVER:
+        //default:  
+    }
+    
     // Done!
     return orxSTATUS_SUCCESS;
 }
+
+
+
+
+
 
 void handleLevelInput()
 {
@@ -90,26 +124,8 @@ void handleLevelInput()
 void handleMenuInput()
 {
  //   orxLOG("Handle Menu Input");
-    
     if (orxInput_IsActive("LeftClick") && orxInput_HasNewStatus("LeftClick"))
     {
-        orxVECTOR pos;
-        orxLOG("LeftClick"); // DO Stuff
-        orxMouse_GetPosition(&pos);
-
-        orxVECTOR vPosition; // The world position of the neighborhood area
-        orxVECTOR vSize; // The size of the neighborhood area
-        orxVECTOR vPivot; // The pivot of the neighborhood area
-        orxOBox_2DSet(&boundingBox, &vPosition, &vPivot, &vSize, 0);
-        orxObject_GetPosition(exitButton, &vPosition); 
-        orxObject_GetPivot(exitButton, &vPivot); 
-        orxObject_GetSize(exitButton, &vSize);
-
-        if(orxOBox_IsInside(&boundingBox, &pos))
-        {
-            orxLOG("Exit Button Klick"); // DO Stuff
-        }
-
         orxOBJECT *object = orxNULL;
      
         // Let's fetch the mouse's position
@@ -120,16 +136,29 @@ void handleMenuInput()
             orxLOG("Irgendwas gefunden!!!");
 
             object = orxObject_Pick(&vPos, orxString_GetID("UI"));
-            orxLOG(orxObject_GetName(object));
+            
+            // Just click on things, crash when clicking background
+            //orxLOG(orxObject_GetName(object));
+            
         }
+
         if(object && (orxInput_HasBeenActivated("LeftClick")))
         {
             // He clicked...so let's start the game if it was the PlayButton
-            if(orxString_Compare(orxObject_GetName(object),"PlayButton") == 0)
+            if(orxString_Compare(orxObject_GetName(object),"StartObject") == 0)
             {
                 //INSERT SOME CODE THAT STARTS YOUR GAME
                 orxLOG("PlayButton geklcikt");
                 gamestate = 1;
+            }
+            else if(orxString_Compare(orxObject_GetName(object),"GearObject") == 0)
+            {
+                orxLOG("Optionen geklcikt");
+                //gamestate = 2;
+            }
+            else if(orxString_Compare(orxObject_GetName(object),"OtherButton") == 0)
+            {
+                //DO OTHER STUFF FOR OTHER BUTTONS
             }
             else if(orxString_Compare(orxObject_GetName(object),"OtherButton") == 0)
             {
@@ -140,72 +169,7 @@ void handleMenuInput()
 
     }
 
-//orxLOG("Handle Menu Input fertitg");
 }
-
-
-//object that stores the currently highlighted button:
-orxOBJECT* highlighted_button = orxNULL;
- 
-void orxFASTCALL Update(const orxCLOCK_INFO *_pstClockInfo, void *_pstContext)
-{
-    orxLOG("update aufgerufen");
-    //current Button under mouse
-    orxOBJECT *object = orxNULL;
- 
-    // Let's fetch the mouse's position
-    orxVECTOR vPos;
-    if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vPos), orxNULL, &vPos) != orxNULL)
-    { 
-        // Let's see what's currently under the mouse
-        object = orxObject_Pick(&vPos, orxString_GetID("UI"));
-    }
- 
-    /* 
-    // Not hovering the same button as before?
-    if(object != highlighted_button)
-    {
-        // Was hovering a button before?
-        if(highlighted_button != orxNULL)
-        {
-          // Go back to inactive state by removing the current target anim
-          orxObject_SetTargetAnim(highlighted_button, orxNULL);
-        }
- 
-        // Are we currently hovering a button?
-        if(object != orxNULL)
-        {
-        // Go to active anim (the anim's name is `Active`, the prefix we defined in config if only used to find the data but doesn't modify the name itself, this makes the animation set reusable between buttons)
-        orxObject_SetTargetAnim(object, "Active");
-        }
- 
-        // Keep track of what we're hovering
-        highlighted_button = object;
-    }*/
-    
-     // Check if the user clicked on a button
-    if(object && (orxInput_HasBeenActivated("LeftClick")))
-    {
-        // He clicked...so let's start the game if it was the PlayButton
-        if(orxString_Compare(orxObject_GetName(object),"PlayButton") == 0)
-        {
-            //INSERT SOME CODE THAT STARTS YOUR GAME
-            gamestate = 1;
-        }
-        else if(orxString_Compare(orxObject_GetName(object),"OtherButton") == 0)
-        {
-            //DO OTHER STUFF FOR OTHER BUTTONS
-        }
-    }
-}
-
-
-
-
-
-
-
-
 
 
 /** Run function, it is called every clock cycle
