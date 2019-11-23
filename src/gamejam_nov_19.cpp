@@ -5,15 +5,16 @@
 
 #include "orx.h"
 #include "Player.h"
+#include <iostream>
 
 #define STATE_MENU 0
 #define STATE_PLAYING 1
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 
-int gamestate = 0;
+int gamestate = 1;
 
-Player* player;
+Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1;
 
 /*
@@ -44,6 +45,7 @@ orxSTATUS orxFASTCALL Init()
         orxLOG(orxObject_GetName(optionenButton));
         orxLOG(orxObject_GetName(creditsButton));
         orxLOG(orxObject_GetName(playButton));
+
     }
     else if(gamestate == STATE_PLAYING)
     {
@@ -51,9 +53,11 @@ orxSTATUS orxFASTCALL Init()
         orxViewport_CreateFromConfig("Viewport");
         
         level1 = orxObject_CreateFromConfig("Level1");
-        // Create the object
-        player = Player::create(orxObject_CreateFromConfig("PlayerObject"), 10);
 
+        orxObject_CreateFromConfig("Level1");
+
+        // Create the object
+        player = new Player(orxObject_CreateFromConfig("PlayerObject"), 10);
     }
 
     // Done!

@@ -10,11 +10,9 @@ class Player {
     orxVECTOR right_speed;
     orxVECTOR up_speed;
     orxVECTOR down_speed;
-    Player(orxOBJECT* obj, float speed);
-    static Player* instance;
     
     public:
-    static Player* create(orxOBJECT* obj, int speed);
+    Player(orxOBJECT* obj, float speed);
     orxOBJECT* getObject() {return object;}
     void move(char direction);
 };
