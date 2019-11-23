@@ -39,8 +39,8 @@ orxSTATUS orxFASTCALL Init()
     if(gamestate == STATE_MENU){
         // Create the viewport
         orxViewport_CreateFromConfig("Viewport");
-        //orxObject_CreateFromConfig("Menu");
-        orxObject_CreateFromConfig("Level1");
+        orxObject_CreateFromConfig("Menu");
+        //orxObject_CreateFromConfig("Level1");
         // Create the object
         player.object = orxObject_CreateFromConfig("PlayerObject");
 
