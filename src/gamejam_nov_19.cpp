@@ -14,10 +14,10 @@
 #define STATE_CREDITS 4
 #define STATE_INTRO 5
 
-int gamestate = 0;
+int gamestate = 1;
 
 Player *player = NULL;
-orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1;
+orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1, *intro;
 
 
 orxOBOX boundingBox;
@@ -55,8 +55,8 @@ void startGame()
         orxLOG("Level geladen");
 
         // Create the player
-        player = new Player(orxObject_CreateFromConfig("PlayerObject"), 15, -15);
-        orxObject_CreateFromConfig("SheepObject");
+        player = new Player(orxObject_CreateFromConfig("PlayerObject"), 30, -30);
+        //orxObject_CreateFromConfig("SheepObject");
     }
 
 }
@@ -82,10 +82,40 @@ void starteIntro()
         orxLOG("Intro geladen");
 
         playButton = orxObject_GetOwnedChild(intro);
-        
-
     }
 }
+        
+
+orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
+{
+    if (_pstEvent->eID == orxPHYSICS_EVENT_CONTACT_ADD) {
+        orxOBJECT *pstRecipientObject, *pstSenderObject;
+    
+        pstSenderObject = orxOBJECT(_pstEvent->hSender);
+        pstRecipientObject = orxOBJECT(_pstEvent->hRecipient);
+    
+        orxSTRING senderObjectName = (orxSTRING)orxObject_GetName(pstSenderObject);
+        orxSTRING recipientObjectName = (orxSTRING)orxObject_GetName(pstRecipientObject);
+    
+        if ((orxString_Compare(senderObjectName, "SheepObject") == 0) && (orxString_Compare(recipientObjectName, "SheepObject") == 0)){
+            orxVECTOR stop = {0, 0, 0};
+            orxObject_SetSpeed(pstSenderObject, &stop);
+            orxObject_SetSpeed(pstRecipientObject, &stop);
+        }
+        if ((orxString_Compare(senderObjectName, "SheepObject") == 0) && (orxString_SearchString(recipientObjectName, "GateObject"))){
+            orxObject_SetLifeTime(pstSenderObject, orxFLOAT_0);
+        }
+
+        if ((orxString_SearchString(senderObjectName, "GateObject")) && (orxString_Compare(recipientObjectName, "SheepObject") == 0)){
+            orxObject_SetLifeTime(pstRecipientObject, orxFLOAT_0);
+        }
+    }
+    return orxSTATUS_SUCCESS;
+}
+
+/*
+ * This is a basic code template to quickly and easily get started with a project or tutorial.
+ */
 
 /** Init function, it is called when all orx's modules have been initialized
  */
@@ -104,6 +134,7 @@ orxSTATUS orxFASTCALL Init()
         //default:  
     }
     
+    orxEvent_AddHandler(orxEVENT_TYPE_PHYSICS, PhysicsEventHandler);
     // Done!
     return orxSTATUS_SUCCESS;
 }
