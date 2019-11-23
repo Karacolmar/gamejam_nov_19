@@ -32,11 +32,21 @@ orxSTATUS orxFASTCALL Init()
         // Create the viewport
         orxViewport_CreateFromConfig("Viewport");
         orxObject_CreateFromConfig("Menu");
-        //orxObject_CreateFromConfig("Level1");
+        
+        // Create the object
+        //player = Player::create(orxObject_CreateFromConfig("PlayerObject"), 10);
+
+    }
+    else if(gamestate == STATE_PLAYING){
+        // Create the viewport
+        orxViewport_CreateFromConfig("Viewport");
+        
+        orxObject_CreateFromConfig("Level1");
         // Create the object
         player = Player::create(orxObject_CreateFromConfig("PlayerObject"), 10);
 
     }
+
 
 
     // Done!
@@ -66,21 +76,36 @@ void handleMenuInput()
         orxLOG("LeftClick"); // DO Stuff
         orxMouse_GetPosition(&pos);
     }
+}
 
-
+/*
     if(orxOBox_IsInside("ExitButton", &pos))
     {
           orxLOG("JAAAAAAAAA"); // DO Stuff
     }   
+*/
 
-
-
-
-
-
-
+/*
+void orxFASTCALL Update(const orxCLOCK_INFO *_pstClockInfo, void *_pContext)
+{ 
 }
 
+orxClock_Register(orxClock_FindFirst(orx2F(-1.0f), orxCLOCK_TYPE_CORE), 
+                  Update, orxNULL, orxMODULE_ID_MAIN, orxCLOCK_PRIORITY_NORMAL);
+
+
+
+
+void orxFASTCALL Update(const orxCLOCK_INFO *_pstClockInfo, void *_pContext)
+{
+    if (ufo) {
+ 
+        if (orxInput_IsActive("GoLeft")) {
+            orxLOG("LEFT PRESSED!");
+        }
+    }
+}
+*/
 /** Run function, it is called every clock cycle
  */
 orxSTATUS orxFASTCALL Run()
