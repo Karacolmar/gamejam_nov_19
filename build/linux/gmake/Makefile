@@ -6,11 +6,15 @@ ifndef config
 endif
 export config
 
-PROJECTS := gamejam_nov_19
+PROJECTS := player gamejam_nov_19
 
 .PHONY: all clean help $(PROJECTS)
 
 all: $(PROJECTS)
+
+player:
+	@echo "=== Linking Player ==="
+	@${MAKE} --no-print-directory -C . -f gamejam_nov_19.make player
 
 gamejam_nov_19: 
 	@echo "==== Building gamejam_nov_19 ($(config)) ===="
