@@ -18,7 +18,10 @@
 int gamestate = 0;
 
 Player *player = NULL;
-orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1, *intro;
+orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1, *intro, *scoreObject;
+
+orxS16 score = 0;
+
 
 void startMenu()
 {
@@ -53,6 +56,8 @@ void startGame()
         level1 = orxObject_CreateFromConfig("Level1");
         orxLOG("Level geladen");
 
+        scoreObject = orxObject_CreateFromConfig("ScoreTextObject");
+
         // Create the player
         player = new Player(orxObject_CreateFromConfig("PlayerObject"), 30, -30);
         //orxObject_CreateFromConfig("SheepObject");
@@ -84,6 +89,17 @@ void starteIntro()
     }
 }
         
+void updateScore(int increase){
+    score += increase;
+
+    if (scoreObject) {
+        orxCHAR formattedScore[5];
+        orxString_Print(formattedScore, "%d", score);
+
+        orxLOG(formattedScore);
+        orxObject_SetTextString(scoreObject, formattedScore);
+    }
+}
 
 orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
 {
@@ -103,10 +119,12 @@ orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
         }
         if ((orxString_Compare(senderObjectName, "SheepObject") == 0) && (orxString_SearchString(recipientObjectName, "GateObject"))){
             orxObject_SetLifeTime(pstSenderObject, orxFLOAT_0);
+            updateScore(10);
         }
 
         if ((orxString_SearchString(senderObjectName, "GateObject")) && (orxString_Compare(recipientObjectName, "SheepObject") == 0)){
             orxObject_SetLifeTime(pstRecipientObject, orxFLOAT_0);
+            updateScore(10);
         }
     }
     return orxSTATUS_SUCCESS;
