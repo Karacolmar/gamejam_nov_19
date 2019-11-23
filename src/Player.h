@@ -10,8 +10,11 @@ class Player {
     orxVECTOR right_speed;
     orxVECTOR up_speed;
     orxVECTOR down_speed;
+    float velocity;
     
     public:
+    bool pushing_sheep;
+
     Player(orxOBJECT* obj, float speed, float minus_speed);
     orxOBJECT* get_object() {return object;}
     orxVECTOR get_left() {return left_speed;}
@@ -19,6 +22,8 @@ class Player {
     orxVECTOR get_up() {return up_speed;}
     orxVECTOR get_down() {return down_speed;} 
     void move(char direction);
+    void set_speed(float speed, float minus_speed);
+    void slow_down();
 };
 
 #endif
