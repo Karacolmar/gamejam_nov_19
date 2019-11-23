@@ -10,8 +10,6 @@ Player::Player(orxOBJECT* obj, float speed, float minus_speed){
 }
 
 void Player::move(char direction){
-    std::cout << "\n";
-    std::cout << direction;
     switch(direction){
         case 'L':
             orxObject_ApplyImpulse(object, &left_speed, orxNULL);

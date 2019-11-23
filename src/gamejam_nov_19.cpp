@@ -57,7 +57,7 @@ orxSTATUS orxFASTCALL Init()
         orxObject_CreateFromConfig("Level1");
 
         // Create the object
-        player = new Player(orxObject_CreateFromConfig("PlayerObject"), 10, -11);
+        player = new Player(orxObject_CreateFromConfig("PlayerObject"), 15, -15);
     }
 
     // Done!
@@ -66,18 +66,24 @@ orxSTATUS orxFASTCALL Init()
 
 void handleLevelInput()
 {
+    orxVECTOR player_movement = {0, 0, 0};
     if(orxInput_IsActive("GoLeft")){
-        player->move('L');
+        player_movement = player->get_left();
+        // player->move('L');
     }
     if(orxInput_IsActive("GoRight")){
-        player->move('R');
+        player_movement = player->get_right();
+        // player->move('R');
     }
     if(orxInput_IsActive("GoUp")){
-        player->move('U');
+        player_movement = player->get_up();
+        // player->move('U');
     }
     if(orxInput_IsActive("GoDown")){
-        player->move('D');
+        player_movement = player->get_down();
+        // player->move('D');
     }
+    orxObject_ApplyImpulse(player->get_object(), &player_movement, orxNULL);
 }
 
 void handleMenuInput()
