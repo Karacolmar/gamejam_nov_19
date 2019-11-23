@@ -12,7 +12,7 @@ class Player {
     orxVECTOR down_speed;
     
     public:
-    Player(orxOBJECT* obj, float speed);
+    Player(orxOBJECT* obj, float speed, float minus_speed);
     orxOBJECT* getObject() {return object;}
     void move(char direction);
 };

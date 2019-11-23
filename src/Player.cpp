@@ -1,14 +1,17 @@
 #include "Player.h"
+#include <iostream>
 
-Player::Player(orxOBJECT* obj, float speed){
+Player::Player(orxOBJECT* obj, float speed, float minus_speed){
     object = obj;
-    orxVECTOR left_speed = {(-1*speed), 0, 0};
-    orxVECTOR right_speed = {speed, 0, 0};
-    orxVECTOR up_speed = {0, (-1*speed), 0};
-    orxVECTOR down_speed = {0, speed, 0};
+    left_speed = {minus_speed, 0, 0};
+    right_speed = {speed, 0, 0};
+    up_speed = {0, minus_speed, 0};
+    down_speed = {0, speed, 0};
 }
 
 void Player::move(char direction){
+    std::cout << "\n";
+    std::cout << direction;
     switch(direction){
         case 'L':
             orxObject_ApplyImpulse(object, &left_speed, orxNULL);
