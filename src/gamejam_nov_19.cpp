@@ -12,11 +12,12 @@
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 #define STATE_CREDITS 4
+#define STATE_INTRO 5
 
 int gamestate = 1;
 
 Player *player = NULL;
-orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1;
+orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1, *intro;
 
 
 orxOBOX boundingBox;
@@ -65,9 +66,25 @@ void startCredits()
 }
 
 void startOptions()
-{}
+{
 
+}
 
+void starteIntro()
+{
+    if(gamestate == STATE_INTRO)
+    {
+        // Create the viewport
+        orxViewport_CreateFromConfig("Viewport");
+        
+        // Create Level
+        intro = orxObject_CreateFromConfig("Intro");
+        orxLOG("Intro geladen");
+
+        playButton = orxObject_GetOwnedChild(intro);
+    }
+}
+        
 
 orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
 {
@@ -123,6 +140,7 @@ orxSTATUS orxFASTCALL Init()
 }
 
 
+
 void handleLevelInput()
 {
     orxVECTOR player_movement = {0, 0, 0};
@@ -145,6 +163,16 @@ void handleLevelInput()
     orxObject_ApplyImpulse(player->get_object(), &player_movement, orxNULL);
 }
 
+void handleIntroInput()
+{
+    if (orxInput_IsActive("Space") && orxInput_HasNewStatus("Space"))
+    {
+        //Continue
+        orxLOG("Spacebar!");
+        
+    }
+}
+
 void handleMenuInput()
 {
  //   orxLOG("Handle Menu Input");
@@ -157,8 +185,7 @@ void handleMenuInput()
         if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vPos), orxNULL, &vPos) != orxNULL)
         { 
             // Let's see what's currently under the mouse
-            orxLOG("Irgendwas gefunden!!!");
-
+            //orxLOG("Irgendwas gefunden!!!");
             object = orxObject_Pick(&vPos, orxString_GetID("UI"));
             
             // Just click on things, crash when clicking background
@@ -174,15 +201,24 @@ void handleMenuInput()
                 //INSERT SOME CODE THAT STARTS YOUR GAME
                 orxLOG("PlayButton geklcikt");
                 gamestate = 1;
+                startGame();
             }
             else if(orxString_Compare(orxObject_GetName(object),"GearObject") == 0)
             {
                 orxLOG("Optionen geklcikt");
                 //gamestate = 2;
             }
-            else if(orxString_Compare(orxObject_GetName(object),"OtherButton") == 0)
+            else if(orxString_Compare(orxObject_GetName(object),"SkullObject") == 0)
             {
                 //DO OTHER STUFF FOR OTHER BUTTONS
+                orxLOG("Exit geklickt");
+                orxSTATUS eResult = orxSTATUS_SUCCESS;
+                // Should quit?
+                if(orxInput_IsActive("Quit"))
+                {
+                    // Update result
+                    eResult = orxSTATUS_FAILURE;
+                }
             }
             else if(orxString_Compare(orxObject_GetName(object),"OtherButton") == 0)
             {
