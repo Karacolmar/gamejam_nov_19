@@ -12,6 +12,7 @@
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 #define STATE_CREDITS 4
+#define STATE_INTRO 5
 
 int gamestate = 0;
 
@@ -55,7 +56,7 @@ void startGame()
 
         // Create the player
         player = new Player(orxObject_CreateFromConfig("PlayerObject"), 15, -15);
-        //orxObject_CreateFromConfig("SheepObject");
+        orxObject_CreateFromConfig("SheepObject");
     }
 
 }
@@ -65,13 +66,14 @@ void startCredits()
 }
 
 void startOptions()
-{}
+{
 
+}
 
-
-/*
- * This is a basic code template to quickly and easily get started with a project or tutorial.
- */
+void starteIntro()
+{
+    
+}
 
 /** Init function, it is called when all orx's modules have been initialized
  */
@@ -93,9 +95,6 @@ orxSTATUS orxFASTCALL Init()
     // Done!
     return orxSTATUS_SUCCESS;
 }
-
-
-
 
 
 
@@ -133,8 +132,7 @@ void handleMenuInput()
         if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vPos), orxNULL, &vPos) != orxNULL)
         { 
             // Let's see what's currently under the mouse
-            orxLOG("Irgendwas gefunden!!!");
-
+            //orxLOG("Irgendwas gefunden!!!");
             object = orxObject_Pick(&vPos, orxString_GetID("UI"));
             
             // Just click on things, crash when clicking background
@@ -150,15 +148,24 @@ void handleMenuInput()
                 //INSERT SOME CODE THAT STARTS YOUR GAME
                 orxLOG("PlayButton geklcikt");
                 gamestate = 1;
+                startGame();
             }
             else if(orxString_Compare(orxObject_GetName(object),"GearObject") == 0)
             {
                 orxLOG("Optionen geklcikt");
                 //gamestate = 2;
             }
-            else if(orxString_Compare(orxObject_GetName(object),"OtherButton") == 0)
+            else if(orxString_Compare(orxObject_GetName(object),"SkullObject") == 0)
             {
                 //DO OTHER STUFF FOR OTHER BUTTONS
+                orxLOG("Exit geklickt");
+                orxSTATUS eResult = orxSTATUS_SUCCESS;
+                // Should quit?
+                if(orxInput_IsActive("Quit"))
+                {
+                    // Update result
+                    eResult = orxSTATUS_FAILURE;
+                }
             }
             else if(orxString_Compare(orxObject_GetName(object),"OtherButton") == 0)
             {
