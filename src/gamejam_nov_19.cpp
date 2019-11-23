@@ -12,11 +12,13 @@
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 
-int gamestate = 1;
+int gamestate = 0;
 
 Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1;
+orxVECTOR pos;
 
+orxOBOX boundingBox;
 /*
  * This is a basic code template to quickly and easily get started with a project or tutorial.
  */
@@ -25,26 +27,24 @@ orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *lev
  */
 orxSTATUS orxFASTCALL Init()
 {
-    // Display a small hint in console
-    orxLOG("\n* This template project creates a viewport/camera couple and an object"
-    "\n* You can play with the config parameters in ../data/config/gamejam_nov_19.ini"
-    "\n* After changing them, relaunch the executable to see the changes.");
-
+    
+    //orxLOG("Init aufgerufen");
     if(gamestate == STATE_MENU)
     {
         // Create the viewport
         orxViewport_CreateFromConfig("Viewport");
         menu = orxObject_CreateFromConfig("Menu");
+        //orxLOG("Level Geladen");
 
         //Get the Children of Menu
         exitButton      = orxObject_GetOwnedChild(menu);
         optionenButton  = orxObject_GetOwnedSibling(orxObject_GetOwnedChild(menu));
         creditsButton   = orxObject_GetOwnedSibling(orxObject_GetOwnedSibling(orxObject_GetOwnedChild(menu)));
         playButton      = orxObject_GetOwnedSibling(orxObject_GetOwnedSibling(orxObject_GetOwnedSibling(orxObject_GetOwnedChild(menu))));
-        orxLOG(orxObject_GetName(exitButton));
-        orxLOG(orxObject_GetName(optionenButton));
-        orxLOG(orxObject_GetName(creditsButton));
-        orxLOG(orxObject_GetName(playButton));
+        //orxLOG(orxObject_GetName(exitButton));
+        //orxLOG(orxObject_GetName(optionenButton));
+        //orxLOG(orxObject_GetName(creditsButton));
+        //orxLOG(orxObject_GetName(playButton));
 
     }
     else if(gamestate == STATE_PLAYING)
@@ -52,11 +52,11 @@ orxSTATUS orxFASTCALL Init()
         // Create the viewport
         orxViewport_CreateFromConfig("Viewport");
         
+        // Create Level
         level1 = orxObject_CreateFromConfig("Level1");
+        orxLOG("Level geladen");
 
-        orxObject_CreateFromConfig("Level1");
-
-        // Create the object
+        // Create the player
         player = new Player(orxObject_CreateFromConfig("PlayerObject"), 15, -15);
     }
 
@@ -88,26 +88,29 @@ void handleLevelInput()
 
 void handleMenuInput()
 {
-    orxVECTOR pos;
-    if (orxInput_IsActive("LeftClick") && orxInput_HasNewStatus("LeftClick")){
+    orxLOG("Handle Menu Input");
+    
+    if (orxInput_IsActive("LeftClick") && orxInput_HasNewStatus("LeftClick"))
+    {
         orxLOG("LeftClick"); // DO Stuff
-        orxMouse_GetPosition(&pos);
-/*
-        if(orxOBox_IsInside(&exitButton, &pos))
+      //  orxMouse_GetPosition(&pos);
+
+        orxVECTOR vPosition; // The world position of the neighborhood area
+        orxVECTOR vSize; // The size of the neighborhood area
+        orxVECTOR vPivot; // The pivot of the neighborhood area
+        orxOBox_2DSet(&boundingBox, &vPosition, &vPivot, &vSize, 0);
+        orxObject_GetPosition(exitButton, &vPosition); 
+        orxObject_GetPivot(exitButton, &vPivot); 
+        orxObject_GetSize(exitButton, &vSize);
+
+        if(orxOBox_IsInside(&boundingBox, &pos))
         {
             orxLOG("Exit Button Klick"); // DO Stuff
-        }*/   
+        }
     }
 
-
+orxLOG("Handle Menu Input fertitg");
 }
-
-/*
-    if(orxOBox_IsInside("ExitButton", &pos))
-    {
-          orxLOG("JAAAAAAAAA"); // DO Stuff
-    }   
-*/
 
 /*
 void orxFASTCALL Update(const orxCLOCK_INFO *_pstClockInfo, void *_pContext)
@@ -143,17 +146,23 @@ orxSTATUS orxFASTCALL Run()
         eResult = orxSTATUS_FAILURE;
     }
     
+    orxLOG("bin in run!");
     switch(gamestate)
     {
-        case STATE_MENU: handleMenuInput();
+        case STATE_MENU: 
+            handleMenuInput();
+           // orxLOG("handle !");
+            break;
         //case STATE_OPTIONS:
-        case STATE_PLAYING: handleLevelInput();
+        case STATE_PLAYING: 
+            handleLevelInput();
+            break;
         //case STATE_GAME_OVER:
-        //default: 
+        //default: orxLOG("default"); 
     }
 
     //handleLevelInput();    
-
+    //orxLOG("fertig mit run");
     // Done!
     return eResult;
 }
