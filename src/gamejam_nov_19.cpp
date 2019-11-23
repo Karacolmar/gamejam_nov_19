@@ -88,12 +88,12 @@ void handleLevelInput()
 
 void handleMenuInput()
 {
-    orxLOG("Handle Menu Input");
+ //   orxLOG("Handle Menu Input");
     
     if (orxInput_IsActive("LeftClick") && orxInput_HasNewStatus("LeftClick"))
     {
         orxLOG("LeftClick"); // DO Stuff
-      //  orxMouse_GetPosition(&pos);
+        orxMouse_GetPosition(&pos);
 
         orxVECTOR vPosition; // The world position of the neighborhood area
         orxVECTOR vSize; // The size of the neighborhood area
@@ -109,7 +109,7 @@ void handleMenuInput()
         }
     }
 
-orxLOG("Handle Menu Input fertitg");
+//orxLOG("Handle Menu Input fertitg");
 }
 
 /*
@@ -146,7 +146,7 @@ orxSTATUS orxFASTCALL Run()
         eResult = orxSTATUS_FAILURE;
     }
     
-    orxLOG("bin in run!");
+    //orxLOG("bin in run!");
     switch(gamestate)
     {
         case STATE_MENU: 
