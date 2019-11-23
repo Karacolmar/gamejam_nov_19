@@ -12,7 +12,7 @@
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 
-int gamestate = 1;
+int gamestate = 0;
 
 Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1;
@@ -104,6 +104,8 @@ void handleMenuInput()
         orxObject_GetPivot(exitButton, &vPivot); 
         orxObject_GetSize(exitButton, &vSize);
 
+        orxLOG()
+
         if(orxOBox_IsInside(&boundingBox, &pos))
         {
             orxLOG("Exit Button Klick"); // DO Stuff
@@ -113,27 +115,7 @@ void handleMenuInput()
 //orxLOG("Handle Menu Input fertitg");
 }
 
-/*
-void orxFASTCALL Update(const orxCLOCK_INFO *_pstClockInfo, void *_pContext)
-{ 
-}
 
-orxClock_Register(orxClock_FindFirst(orx2F(-1.0f), orxCLOCK_TYPE_CORE), 
-                  Update, orxNULL, orxMODULE_ID_MAIN, orxCLOCK_PRIORITY_NORMAL);
-
-
-
-
-void orxFASTCALL Update(const orxCLOCK_INFO *_pstClockInfo, void *_pContext)
-{
-    if (ufo) {
- 
-        if (orxInput_IsActive("GoLeft")) {
-            orxLOG("LEFT PRESSED!");
-        }
-    }
-}
-*/
 
 /** Run function, it is called every clock cycle
  */
