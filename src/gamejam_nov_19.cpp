@@ -55,7 +55,7 @@ void startGame()
 
         // Create the player
         player = new Player(orxObject_CreateFromConfig("PlayerObject"), 15, -15);
-        orxObject_CreateFromConfig("SheepObject");
+        //orxObject_CreateFromConfig("SheepObject");
     }
 
 }
