@@ -12,11 +12,11 @@
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 
-int gamestate = 0;
+int gamestate = 1;
 
 Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1;
-orxVECTOR pos;
+
 
 orxOBOX boundingBox;
 /*
@@ -93,6 +93,7 @@ void handleMenuInput()
     
     if (orxInput_IsActive("LeftClick") && orxInput_HasNewStatus("LeftClick"))
     {
+        orxVECTOR pos;
         orxLOG("LeftClick"); // DO Stuff
         orxMouse_GetPosition(&pos);
 
@@ -104,8 +105,6 @@ void handleMenuInput()
         orxObject_GetPivot(exitButton, &vPivot); 
         orxObject_GetSize(exitButton, &vSize);
 
-        orxLOG()
-
         if(orxOBox_IsInside(&boundingBox, &pos))
         {
             orxLOG("Exit Button Klick"); // DO Stuff
@@ -114,6 +113,68 @@ void handleMenuInput()
 
 //orxLOG("Handle Menu Input fertitg");
 }
+
+
+//object that stores the currently highlighted button:
+orxOBJECT* highlighted_button = orxNULL;
+ 
+void orxFASTCALL Update(const orxCLOCK_INFO *_pstClockInfo, void *_pstContext)
+{
+    //current Button under mouse
+    orxOBJECT *object = orxNULL;
+ 
+    // Let's fetch the mouse's position
+    orxVECTOR vPos;
+    if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vPos), orxNULL, &vPos) != orxNULL)
+    { 
+        // Let's see what's currently under the mouse
+        object = orxObject_Pick(&vPos, orxString_GetID("UI"));
+    }
+ 
+    /* 
+    // Not hovering the same button as before?
+    if(object != highlighted_button)
+    {
+        // Was hovering a button before?
+        if(highlighted_button != orxNULL)
+        {
+          // Go back to inactive state by removing the current target anim
+          orxObject_SetTargetAnim(highlighted_button, orxNULL);
+        }
+ 
+        // Are we currently hovering a button?
+        if(object != orxNULL)
+        {
+        // Go to active anim (the anim's name is `Active`, the prefix we defined in config if only used to find the data but doesn't modify the name itself, this makes the animation set reusable between buttons)
+        orxObject_SetTargetAnim(object, "Active");
+        }
+ 
+        // Keep track of what we're hovering
+        highlighted_button = object;
+    }*/
+    
+     // Check if the user clicked on a button
+    if(object && (orxInput_HasBeenActivated("LeftClick")))
+    {
+        // He clicked...so let's start the game if it was the PlayButton
+        if(orxString_Compare(orxObject_GetName(object),"PlayButton") == 0)
+        {
+            //INSERT SOME CODE THAT STARTS YOUR GAME
+            gamestate = 1;
+        }
+        else if(orxString_Compare(orxObject_GetName(object),"OtherButton") == 0)
+        {
+            //DO OTHER STUFF FOR OTHER BUTTONS
+        }
+    }
+}
+
+
+
+
+
+
+
 
 
 
