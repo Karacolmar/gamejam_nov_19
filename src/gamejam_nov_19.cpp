@@ -54,10 +54,9 @@ orxSTATUS orxFASTCALL Init()
         
         level1 = orxObject_CreateFromConfig("Level1");
 
-        orxObject_CreateFromConfig("Level1");
-
         // Create the object
         player = new Player(orxObject_CreateFromConfig("PlayerObject"), 15, -15);
+        orxObject_CreateFromConfig("SheepObject");
     }
 
     // Done!
