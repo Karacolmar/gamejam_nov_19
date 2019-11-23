@@ -10,7 +10,7 @@ class Player {
     orxVECTOR right_speed;
     orxVECTOR up_speed;
     orxVECTOR down_speed;
-    Player(orxOBJECT* obj, int speed);
+    Player(orxOBJECT* obj, float speed);
     static Player* instance;
     
     public:

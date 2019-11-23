@@ -166,7 +166,7 @@ endif
 OBJECTS := \
 	$(OBJDIR)/gamejam_nov_19.o \
 
-RESOURCES := ../../../src/Player.o\
+RESOURCES := $(OBJDIR)/Player.o\
 
 SHELLTYPE := msdos
 ifeq (,$(ComSpec)$(COMSPEC))
@@ -218,6 +218,9 @@ prebuild:
 prelink:
 	$(PRELINKCMDS)
 
+player: ../../../src/Player.cpp
+	$(SILENT) $(CXX) -o "$(OBJDIR)/Player.o" -c "../../../src/Player.cpp" -I$(ORX)/include
+
 ifneq (,$(PCH))
 .NOTPARALLEL: $(GCH) $(PCH)
 $(GCH): $(PCH)
@@ -225,7 +228,7 @@ $(GCH): $(PCH)
 	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -MMD -MP $(DEFINES) $(INCLUDES) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"
 endif
 
-$(OBJDIR)/gamejam_nov_19.o: ../../../src/gamejam_nov_19.cpp ../../../src/Player.cpp
+$(OBJDIR)/gamejam_nov_19.o: ../../../src/gamejam_nov_19.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

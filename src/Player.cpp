@@ -2,7 +2,7 @@
 
 Player* Player::instance = 0;
 
-Player::Player(orxOBJECT* obj, int speed){
+Player::Player(orxOBJECT* obj, float speed){
     object = obj;
     orxVECTOR left_speed = {(-1*speed), 0, 0};
     orxVECTOR right_speed = {speed, 0, 0};
