@@ -5,15 +5,16 @@
 
 #include "orx.h"
 #include "Player.h"
+#include <iostream>
 
 #define STATE_MENU 0
 #define STATE_PLAYING 1
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 
-int gamestate = 0;
+int gamestate = 1;
 
-Player* player;
+Player *player = NULL;
 
 /*
  * This is a basic code template to quickly and easily get started with a project or tutorial.
@@ -31,11 +32,10 @@ orxSTATUS orxFASTCALL Init()
     if(gamestate == STATE_MENU){
         // Create the viewport
         orxViewport_CreateFromConfig("Viewport");
-        orxObject_CreateFromConfig("Menu");
-        //orxObject_CreateFromConfig("Level1");
+        //orxObject_CreateFromConfig("Menu");
+        orxObject_CreateFromConfig("Level1");
         // Create the object
-        player = Player::create(orxObject_CreateFromConfig("PlayerObject"), 10);
-
+        player = new Player(orxObject_CreateFromConfig("PlayerObject"), 10);
     }
 
 

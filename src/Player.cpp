@@ -1,7 +1,5 @@
 #include "Player.h"
 
-Player* Player::instance = 0;
-
 Player::Player(orxOBJECT* obj, float speed){
     object = obj;
     orxVECTOR left_speed = {(-1*speed), 0, 0};
@@ -21,12 +19,5 @@ void Player::move(char direction){
         case 'D':
             orxObject_ApplyImpulse(object, &down_speed, orxNULL);
     }    
-}
-
-Player* Player::create(orxOBJECT* obj, int speed){
-    if (instance == 0){
-        instance = new Player(obj, speed);
-    }
-    return instance;
 }
 
