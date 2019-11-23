@@ -12,7 +12,7 @@
 #define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 
-int gamestate = 0;
+int gamestate = 1;
 
 Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1;
