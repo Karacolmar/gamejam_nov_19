@@ -72,7 +72,19 @@ void startOptions()
 
 void starteIntro()
 {
-    
+    if(gamestate == STATE_INTRO)
+    {
+        // Create the viewport
+        orxViewport_CreateFromConfig("Viewport");
+        
+        // Create Level
+        intro = orxObject_CreateFromConfig("Intro");
+        orxLOG("Intro geladen");
+
+        playButton = orxObject_GetOwnedChild(intro);
+        
+
+    }
 }
 
 /** Init function, it is called when all orx's modules have been initialized
@@ -118,6 +130,16 @@ void handleLevelInput()
         // player->move('D');
     }
     orxObject_ApplyImpulse(player->get_object(), &player_movement, orxNULL);
+}
+
+void handleIntroInput()
+{
+    if (orxInput_IsActive("Space") && orxInput_HasNewStatus("Space"))
+    {
+        //Continue
+        orxLOG("Spacebar!");
+        
+    }
 }
 
 void handleMenuInput()
