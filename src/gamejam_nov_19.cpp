@@ -14,6 +14,7 @@
 int gamestate = 0;
 
 Player* player;
+orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1;
 
 /*
  * This is a basic code template to quickly and easily get started with a project or tutorial.
@@ -28,26 +29,32 @@ orxSTATUS orxFASTCALL Init()
     "\n* You can play with the config parameters in ../data/config/gamejam_nov_19.ini"
     "\n* After changing them, relaunch the executable to see the changes.");
 
-    if(gamestate == STATE_MENU){
+    if(gamestate == STATE_MENU)
+    {
         // Create the viewport
         orxViewport_CreateFromConfig("Viewport");
-        orxObject_CreateFromConfig("Menu");
-        
-        // Create the object
-        //player = Player::create(orxObject_CreateFromConfig("PlayerObject"), 10);
+        menu = orxObject_CreateFromConfig("Menu");
 
+        //Get the Children of Menu
+        exitButton      = orxObject_GetOwnedChild(menu);
+        optionenButton  = orxObject_GetOwnedSibling(orxObject_GetOwnedChild(menu));
+        creditsButton   = orxObject_GetOwnedSibling(orxObject_GetOwnedSibling(orxObject_GetOwnedChild(menu)));
+        playButton      = orxObject_GetOwnedSibling(orxObject_GetOwnedSibling(orxObject_GetOwnedSibling(orxObject_GetOwnedChild(menu))));
+        orxLOG(orxObject_GetName(exitButton));
+        orxLOG(orxObject_GetName(optionenButton));
+        orxLOG(orxObject_GetName(creditsButton));
+        orxLOG(orxObject_GetName(playButton));
     }
-    else if(gamestate == STATE_PLAYING){
+    else if(gamestate == STATE_PLAYING)
+    {
         // Create the viewport
         orxViewport_CreateFromConfig("Viewport");
         
-        orxObject_CreateFromConfig("Level1");
+        level1 = orxObject_CreateFromConfig("Level1");
         // Create the object
         player = Player::create(orxObject_CreateFromConfig("PlayerObject"), 10);
 
     }
-
-
 
     // Done!
     return orxSTATUS_SUCCESS;
@@ -106,6 +113,7 @@ void orxFASTCALL Update(const orxCLOCK_INFO *_pstClockInfo, void *_pContext)
     }
 }
 */
+
 /** Run function, it is called every clock cycle
  */
 orxSTATUS orxFASTCALL Run()
