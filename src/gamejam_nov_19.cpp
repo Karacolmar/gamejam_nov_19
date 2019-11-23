@@ -92,11 +92,11 @@ void handleMenuInput()
     if (orxInput_IsActive("LeftClick") && orxInput_HasNewStatus("LeftClick")){
         orxLOG("LeftClick"); // DO Stuff
         orxMouse_GetPosition(&pos);
-
+/*
         if(orxOBox_IsInside(&exitButton, &pos))
         {
             orxLOG("Exit Button Klick"); // DO Stuff
-        }   
+        }*/   
     }
 
 
