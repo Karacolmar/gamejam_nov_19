@@ -31,7 +31,7 @@ ifeq ($(config),debug64)
   ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   ALL_LDFLAGS   += $(LDFLAGS) -L$(ORX)/lib/dynamic -L. -static-libgcc -static-libstdc++ -m64 -L/usr/lib64 -Wl,-rpath ./ -Wl,--export-dynamic
   LIBS      += -lorxd -ldl -lm -lrt
-  LDDEPS    +=
+  LDDEPS    += 
   LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -166,7 +166,7 @@ endif
 OBJECTS := \
 	$(OBJDIR)/gamejam_nov_19.o \
 
-RESOURCES := \
+RESOURCES := ../../../src/Player.o\
 
 SHELLTYPE := msdos
 ifeq (,$(ComSpec)$(COMSPEC))
@@ -225,7 +225,7 @@ $(GCH): $(PCH)
 	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -MMD -MP $(DEFINES) $(INCLUDES) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"
 endif
 
-$(OBJDIR)/gamejam_nov_19.o: ../../../src/gamejam_nov_19.cpp
+$(OBJDIR)/gamejam_nov_19.o: ../../../src/gamejam_nov_19.cpp ../../../src/Player.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

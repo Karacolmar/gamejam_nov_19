@@ -4,6 +4,7 @@
  */
 
 #include "orx.h"
+#include "Player.h"
 
 #define STATE_MENU 0
 #define STATE_PLAYING 1
@@ -12,16 +13,7 @@
 
 int gamestate = 0;
 
-class Player {
-    public:
-    orxOBJECT* object;
-    orxVECTOR left_speed = {-10, 0, 0};
-    orxVECTOR right_speed = {10, 0, 0};
-    orxVECTOR up_speed = {0, -10, 0};
-    orxVECTOR down_speed = {0, 10, 0};
-};
-
-Player player;
+Player* player;
 
 /*
  * This is a basic code template to quickly and easily get started with a project or tutorial.
@@ -42,8 +34,7 @@ orxSTATUS orxFASTCALL Init()
         orxObject_CreateFromConfig("Menu");
         //orxObject_CreateFromConfig("Level1");
         // Create the object
-        player.object = orxObject_CreateFromConfig("PlayerObject");
-
+        player = Player::create(orxObject_CreateFromConfig("PlayerObject"), 10);
 
     }
 
@@ -54,26 +45,18 @@ orxSTATUS orxFASTCALL Init()
 
 void handleKeyboardInput()
 {
-    if(orxInput_IsActive("GoLeft"))
-    {
-        orxObject_ApplyImpulse(player.object, &player.left_speed, orxNULL);
+    if(orxInput_IsActive("GoLeft")){
+        player->move('L');
     }
-
-    if(orxInput_IsActive("GoRight"))
-    {
-        orxObject_ApplyImpulse(player.object, &player.right_speed, orxNULL);
+    if(orxInput_IsActive("GoRight")){
+        player->move('R');
     }
-
-    if(orxInput_IsActive("GoUp"))
-    {
-        orxObject_ApplyImpulse(player.object, &player.up_speed, orxNULL);
+    if(orxInput_IsActive("GoUp")){
+        player->move('U');
     }
-
-    if(orxInput_IsActive("GoDown"))
-    {
-        orxObject_ApplyImpulse(player.object, &player.down_speed, orxNULL);
+    if(orxInput_IsActive("GoDown")){
+        player->move('D');
     }
-
 }
 
 /** Run function, it is called every clock cycle
