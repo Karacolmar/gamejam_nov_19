@@ -8,7 +8,7 @@
 
 #define STATE_MENU 0
 #define STATE_PLAYING 1
-#define STATE_SHOP 2
+#define STATE_OPTIONS 2
 #define STATE_GAME_OVER 3
 
 int gamestate = 0;
@@ -43,7 +43,7 @@ orxSTATUS orxFASTCALL Init()
     return orxSTATUS_SUCCESS;
 }
 
-void handleKeyboardInput()
+void handleLevelInput()
 {
     if(orxInput_IsActive("GoLeft")){
         player->move('L');
@@ -59,6 +59,16 @@ void handleKeyboardInput()
     }
 }
 
+void handleMenuInput()
+{
+    orxVECTOR pos;
+    if (orxInput_IsActive("LeftClick") == orxTRUE){
+        orxLOG("LeftClick"); // DO Stuff
+        orxMouse_GetPosition(&pos);
+    }
+
+}
+
 /** Run function, it is called every clock cycle
  */
 orxSTATUS orxFASTCALL Run()
@@ -70,17 +80,17 @@ orxSTATUS orxFASTCALL Run()
         // Update result
         eResult = orxSTATUS_FAILURE;
     }
-    /*
+    
     switch(gamestate)
     {
-        case STATE_MENU:
-        case STATE_SHOP:
-        case STATE_PLAYING:
-        case STATE_GAME_OVER:
-        default: 
-    }*/
+        case STATE_MENU: handleMenuInput();
+        //case STATE_OPTIONS:
+        case STATE_PLAYING: handleLevelInput();
+        //case STATE_GAME_OVER:
+        //default: 
+    }
 
-    handleKeyboardInput();    
+    //handleLevelInput();    
 
     // Done!
     return eResult;
