@@ -15,7 +15,7 @@
 #define STATE_CREDITS 4
 #define STATE_INTRO 5
 
-int gamestate = 0;
+int gamestate = 1;
 
 Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject;
@@ -126,7 +126,7 @@ void updateScore(int increase){
 
 orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
 {
-    if (_pstEvent->eID == orxPHYSICS_EVENT_CONTACT_ADD) {
+    if ((_pstEvent->eID == orxPHYSICS_EVENT_CONTACT_ADD) && (gamestate == STATE_PLAYING)) {
         orxOBJECT *pstRecipientObject, *pstSenderObject;
     
         pstSenderObject = orxOBJECT(_pstEvent->hSender);
@@ -136,9 +136,9 @@ orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
         orxSTRING recipientObjectName = (orxSTRING)orxObject_GetName(pstRecipientObject);
     
         if ((orxString_Compare(senderObjectName, "SheepObject") == 0) && (orxString_Compare(recipientObjectName, "SheepObject") == 0)){
-            orxVECTOR stop = {0, 0, 0};
-            orxObject_SetSpeed(pstSenderObject, &stop);
-            orxObject_SetSpeed(pstRecipientObject, &stop);
+                orxVECTOR stop = {0, 0, 0};
+                orxObject_SetSpeed(pstSenderObject, &stop);
+                orxObject_SetSpeed(pstRecipientObject, &stop);
         }
         if ((orxString_Compare(senderObjectName, "SheepObject") == 0) && (orxString_SearchString(recipientObjectName, "GateObject"))){
             orxObject_SetLifeTime(pstSenderObject, orxFLOAT_0);
@@ -265,7 +265,7 @@ void handleMenuInput()
             }
             else if(orxString_Compare(orxObject_GetName(object),"GearObject") == 0)
             {
-                orxLOG("Optionen geklcikt");
+                orxLOG("Optionen geklickt");
                 //gamestate = 2;
             }
             else if(orxString_Compare(orxObject_GetName(object),"SkullObject") == 0)
@@ -285,20 +285,24 @@ void handleMenuInput()
             {
                 //DO OTHER STUFF FOR OTHER BUTTONS
             }
-    }
-
-
+        }   
     }
 
 }
 
 void checkOver(){
     if (time_passed >= time_lose){
-        orxObject_AddTimeLineTrack(level, "PopUpGameOverTrack");
+        orxObject_CreateFromConfig("Gameover");
+        orxObject_SetLifeTime(level, orxFLOAT_0);
+        orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
+        gamestate = STATE_GAME_OVER;
     }
 
     else if (score >= score_win){
-        orxObject_AddTimeLineTrack(level, "PopUpGameOverTrack");
+        orxObject_CreateFromConfig("winscreen");
+        orxObject_SetLifeTime(level, orxFLOAT_0);
+        orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
+        gamestate = STATE_GAME_OVER;
     }
 }
 
@@ -312,7 +316,7 @@ orxSTATUS orxFASTCALL Run()
     if(orxInput_IsActive("Quit"))
     {
         // Update result
-        orxObject_AddSound(menu, "ExitSound");
+        //orxObject_AddSound(menu, "ExitSound");
         eResult = orxSTATUS_FAILURE;
     }
     
