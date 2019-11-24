@@ -345,19 +345,19 @@ void handleIntroInput()
 {
     if (orxInput_IsActive("Space") && orxInput_HasNewStatus("Space"))
     {
-        if(gamestate <10)
+        orxLOG("Spacebar!");
+        if(gamestate >4 && gamestate <9)
         {
-            //Continue
-            orxLOG("Spacebar!");
+            //Continue Intro
             orxObject_SetLifeTime(intro, orxFLOAT_0);
             gamestate++;
             startIntro();
         }
         else
         {
-            orxLOG("Spacebar!");
+            orxLOG("Intro Zuende!");
             orxObject_SetLifeTime(intro, orxFLOAT_0);
-            gamestate == STATE_PLAYING;
+            gamestate = STATE_PLAYING;
             startGame();    
         }    
     }
@@ -490,7 +490,9 @@ orxSTATUS orxFASTCALL Run()
         case STATE_INTRO:
             handleIntroInput();
             break;
-        //default: orxLOG("default"); 
+        default: // Intro States
+            handleIntroInput();
+            break;
     }
 
     //orxLOG("fertig mit run");
