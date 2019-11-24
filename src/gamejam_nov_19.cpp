@@ -11,10 +11,15 @@
 
 #define STATE_MENU 0
 #define STATE_PLAYING 1
-#define STATE_OPTIONS 2
+#define STATE_WIN 2
 #define STATE_GAME_OVER 3
 #define STATE_CREDITS 4
 #define STATE_INTRO 5
+#define STATE_INTRO2 6
+#define STATE_INTRO3 7
+#define STATE_INTRO4 8
+
+
 
 int gamestate = 0;
 int level_no = 1;
@@ -120,22 +125,27 @@ void startGame()
 
 }
 
-void startCredits()
-{
-}
-
-void startOptions()
-{
-
-}
 
 void startGameOver()
 {
     if(gamestate == STATE_GAME_OVER)
     {
-        //usleep(5000000);
-        //gamestate = STATE_MENU;    
-        //orxObject_SetLifeTime(gameover, orxFLOAT_0);
+        // Create the viewport
+        orxViewport_CreateFromConfig("Viewport");
+        gameover = orxObject_CreateFromConfig("Gameover");
+        orxLOG("Gameover geladen");
+    }
+
+}
+
+void startWinScreen()
+{
+    if(gamestate == STATE_WIN)
+    {
+        // Create the viewport
+        orxViewport_CreateFromConfig("Viewport");
+        gameover = orxObject_CreateFromConfig("Winscreen");
+        orxLOG("Win geladen");
     }
 
 }
@@ -339,20 +349,37 @@ void handleMenuInput()
 
 }
 
+void handleGameoverInput()
+{
+    if (orxInput_IsActive("Space") && orxInput_HasNewStatus("Space"))
+    {
+        //Continue
+        orxLOG("Spacebar!");
+        orxObject_SetLifeTime(gameover, orxFLOAT_0);
+        gamestate = STATE_MENU;
+        startMenu();
+        
+    }
+}
+
 void checkOver(){
     if (time_left){
         if (time_left <= 0){
-            if (score >= score_win){
-                orxObject_CreateFromConfig("Winscreen");
-            }
-            else {
-                orxObject_CreateFromConfig("Gameover");
-            }
+            
             orxObject_SetLifeTime(level, orxFLOAT_0);
             orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
             orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
             orxObject_SetLifeTime(clockObject, orxFLOAT_0);
-            gamestate = STATE_GAME_OVER;
+            
+            if (score >= score_win){
+                gamestate = STATE_WIN;
+                startWinScreen();
+            }
+            else {
+                gamestate = STATE_GAME_OVER;
+                startGameOver();
+            }
+
         }
 
         else if (time_left <= 10){
@@ -390,13 +417,15 @@ orxSTATUS orxFASTCALL Run()
             handleMenuInput();
            // orxLOG("handle !");
             break;
-        //case STATE_OPTIONS:
         case STATE_PLAYING: 
             handleLevelInput();
             checkOver();
             break;
         case STATE_GAME_OVER:
-            startGameOver();
+            handleGameoverInput();
+            break;
+        case STATE_WIN:
+            handleGameoverInput(); // WIn und Gameover haben gleichen Input / Logik
             break;
         case STATE_INTRO:
             handleIntroInput();
@@ -404,9 +433,7 @@ orxSTATUS orxFASTCALL Run()
         //default: orxLOG("default"); 
     }
 
-    //handleLevelInput();    
     //orxLOG("fertig mit run");
-    // Done!
     return eResult;
 }
 
