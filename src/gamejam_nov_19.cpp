@@ -144,12 +144,12 @@ orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
                 orxObject_SetSpeed(pstSenderObject, &stop);
                 orxObject_SetSpeed(pstRecipientObject, &stop);
         }
-        if ((orxString_Compare(senderObjectName, "SheepObject") == 0) && (orxString_SearchString(recipientObjectName, "GateObject"))){
+        if ((orxString_Compare(senderObjectName, "SheepObject") == 0) && (orxString_SearchString(recipientObjectName, "GateBodyObject"))){
             orxObject_SetLifeTime(pstSenderObject, orxFLOAT_0);
             updateScore(10);
         }
 
-        if ((orxString_SearchString(senderObjectName, "GateObject")) && (orxString_Compare(recipientObjectName, "SheepObject") == 0)){
+        if ((orxString_SearchString(senderObjectName, "GateBodyObject")) && (orxString_Compare(recipientObjectName, "SheepObject") == 0)){
             orxObject_SetLifeTime(pstRecipientObject, orxFLOAT_0);
             updateScore(10);
         }
