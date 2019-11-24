@@ -16,7 +16,7 @@
 #define STATE_CREDITS 4
 #define STATE_INTRO 5
 
-int gamestate = 1;
+int gamestate = 5;
 
 Player *player = NULL;
 orxOBJECT *gameover, *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject, *clockObject;
@@ -121,7 +121,7 @@ void starteIntro()
         intro = orxObject_CreateFromConfig("Intro");
         orxLOG("Intro geladen");
 
-        playButton = orxObject_GetOwnedChild(intro);
+        //playButton = orxObject_GetOwnedChild(intro);
     }
 }
         
@@ -180,6 +180,7 @@ orxSTATUS orxFASTCALL Init()
             startGame();
             break;
         case STATE_INTRO:
+            starteIntro();
             break;
         case STATE_GAME_OVER:
             starteGameOver();
@@ -242,6 +243,8 @@ void handleIntroInput()
     {
         //Continue
         orxLOG("Spacebar!");
+        orxObject_SetLifeTime(intro, orxFLOAT_0);
+        gamestate = STATE_PLAYING;
         
     }
 }
