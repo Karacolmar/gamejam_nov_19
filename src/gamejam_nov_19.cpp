@@ -170,9 +170,15 @@ orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
 {
     if ((_pstEvent->eID == orxPHYSICS_EVENT_CONTACT_ADD) && (gamestate == STATE_PLAYING)) {
         orxOBJECT *pstRecipientObject, *pstSenderObject;
+
+        /*
+        // retrieve body part names from collision events
+        orxPHYSICS_EVENT_PAYLOAD* payload = (orxPHYSICS_EVENT_PAYLOAD*)_pstEvent->pstPayload; 
+        orxLOG("Recipient %s | Sender: %s", payload->zRecipientPartName, payload->zSenderPartName);
     
         pstSenderObject = orxOBJECT(_pstEvent->hSender);
         pstRecipientObject = orxOBJECT(_pstEvent->hRecipient);
+        */
     
         orxSTRING senderObjectName = (orxSTRING)orxObject_GetName(pstSenderObject);
         orxSTRING recipientObjectName = (orxSTRING)orxObject_GetName(pstRecipientObject);
