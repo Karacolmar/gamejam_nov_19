@@ -16,7 +16,7 @@
 #define STATE_CREDITS 4
 #define STATE_INTRO 5
 
-int gamestate = 1;
+int gamestate = 0;
 int level_no = 1;
 
 Player *player = NULL;
@@ -129,15 +129,18 @@ void startOptions()
 
 }
 
-void starteGameOver()
+void startGameOver()
 {
-    //usleep(5000000);
-    //gamestate = STATE_MENU;    
-    //orxObject_SetLifeTime(gameover, orxFLOAT_0);
+    if(gamestate == STATE_GAME_OVER)
+    {
+        //usleep(5000000);
+        //gamestate = STATE_MENU;    
+        //orxObject_SetLifeTime(gameover, orxFLOAT_0);
+    }
 
 }
 
-void starteIntro()
+void startIntro()
 {
     if(gamestate == STATE_INTRO)
     {
@@ -207,9 +210,10 @@ orxSTATUS orxFASTCALL Init()
             startGame();
             break;
         case STATE_INTRO:
+            startIntro();
             break;
         case STATE_GAME_OVER:
-            starteGameOver();
+            startGameOver();
             break;
         //default:  
     }
@@ -269,6 +273,9 @@ void handleIntroInput()
     {
         //Continue
         orxLOG("Spacebar!");
+        orxObject_SetLifeTime(intro, orxFLOAT_0);
+        gamestate = STATE_PLAYING;
+        startGame();
         
     }
 }
@@ -301,8 +308,9 @@ void handleMenuInput()
                 //INSERT SOME CODE THAT STARTS YOUR GAME
                 orxLOG("PlayButton geklcikt");
                 orxObject_AddSound(menu, "StartSound");
-                gamestate = 1;
-                startGame();
+                orxObject_SetLifeTime(menu, orxFLOAT_0);
+                gamestate = STATE_INTRO;
+                startIntro();
             }
             else if(orxString_Compare(orxObject_GetName(object),"GearObject") == 0)
             {
@@ -388,7 +396,10 @@ orxSTATUS orxFASTCALL Run()
             checkOver();
             break;
         case STATE_GAME_OVER:
-            starteGameOver();
+            startGameOver();
+            break;
+        case STATE_INTRO:
+            handleIntroInput();
             break;
         //default: orxLOG("default"); 
     }
