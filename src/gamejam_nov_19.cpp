@@ -306,17 +306,13 @@ void handleMenuInput()
 
 void checkOver(){
     if (time_left){
-        if (time_left <= 1){
-            orxObject_CreateFromConfig("Gameover");
-            orxObject_SetLifeTime(level, orxFLOAT_0);
-            orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
-            orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
-            orxObject_SetLifeTime(clockObject, orxFLOAT_0);
-            gamestate = STATE_GAME_OVER;
-        }
-
-        else if (score >= score_win){
-            orxObject_CreateFromConfig("Winscreen");
+        if (time_left <= 0){
+            if (score >= score_win){
+                orxObject_CreateFromConfig("Winscreen");
+            }
+            else {
+                orxObject_CreateFromConfig("Gameover");
+            }
             orxObject_SetLifeTime(level, orxFLOAT_0);
             orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
             orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
