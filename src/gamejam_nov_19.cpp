@@ -22,6 +22,19 @@ orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *lev
 orxS16 score = 0;
 
 orxOBOX boundingBox;
+
+void orxFASTCALL updateTimer(const orxCLOCK_INFO *info, void *object){
+    orxLOG("they called me!");
+    orxCHAR timerStr[5];
+    orxS16 time_passed = orxMath_Floor(info->fTime);
+    orxS16 minutes = orxMath_Floor(time_passed/60);
+    orxS16 seconds = time_passed%60;
+
+    orxString_Print(timerStr, "%02d:%02d", minutes, seconds);
+
+    orxObject_SetTextString((orxOBJECT*)object, timerStr);
+}
+
 void startMenu()
 {
     if(gamestate == STATE_MENU)
@@ -60,6 +73,10 @@ void startGame()
         // Create the player
         player = new Player(orxObject_CreateFromConfig("PlayerObject"), 30, -30);
         //orxObject_CreateFromConfig("SheepObject");
+
+        orxCLOCK* clockTimer = orxClock_Create(0.9, orxCLOCK_TYPE_USER);
+        orxOBJECT* clockObject = orxObject_CreateFromConfig("ClockObject");
+        orxClock_Register(clockTimer, updateTimer, clockObject, orxMODULE_ID_MAIN, orxCLOCK_PRIORITY_NORMAL);   
     }
 
 }
@@ -92,10 +109,9 @@ void updateScore(int increase){
     score += increase;
 
     if (scoreObject) {
-        orxCHAR formattedScore[5];
-        orxString_Print(formattedScore, "%d", score);
+        orxCHAR formattedScore[3];
+        orxString_Print(formattedScore, "%03d", score);
 
-        orxLOG(formattedScore);
         orxObject_SetTextString(scoreObject, formattedScore);
     }
 }
