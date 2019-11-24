@@ -66,6 +66,7 @@ void startMenu()
         //orxLOG(orxObject_GetName(optionenButton));
         //orxLOG(orxObject_GetName(creditsButton));
         //orxLOG(orxObject_GetName(playButton));
+        orxObject_AddSound(menu, "herderennt");
     }
 
 }
@@ -115,13 +116,15 @@ void startGame()
         }
 
         scoreObject = orxObject_CreateFromConfig("ScoreTextObject");
-
+        orxObject_AddSound(level, "level_bg");
         // Create the player
         player = new Player(orxObject_CreateFromConfig("PlayerObject"), 30, -30);
 
         orxCLOCK* clockTimer = orxClock_Create(0.9, orxCLOCK_TYPE_USER);
         clockObject = orxObject_CreateFromConfig("ClockObject");
         orxClock_Register(clockTimer, updateTimer, clockObject, orxMODULE_ID_MAIN, orxCLOCK_PRIORITY_NORMAL);   
+    
+
     }
 
 }
