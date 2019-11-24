@@ -17,6 +17,7 @@
 #define STATE_INTRO 5
 
 int gamestate = 1;
+int level_no = 1;
 
 Player *player = NULL;
 orxOBJECT *gameover, *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject, *clockObject;
@@ -71,20 +72,46 @@ void startGame()
         orxViewport_CreateFromConfig("Viewport");
         
         // Create Level
-        level = orxObject_CreateFromConfig("Level1");
-        if (orxConfig_PushSection("Level1WinLoseCond")){
-            time_lose = orxConfig_GetS32("Time");
-            time_left = time_lose;
-            score_win = orxConfig_GetS32("Points");
-            orxConfig_PopSection();
+        switch(level_no){
+            case 0:
+                level = orxObject_CreateFromConfig("Level1");
+                level_no += 1;
+                if (orxConfig_PushSection("Level1WinLoseCond")){
+                    time_lose = orxConfig_GetS32("Time");
+                    time_left = time_lose;
+                    score_win = orxConfig_GetS32("Points");
+                    orxConfig_PopSection();
+                }
+                orxLOG("Level 1 geladen");
+                break;
+            case 1:
+                level = orxObject_CreateFromConfig("Level2");
+                level_no += 1;
+                if (orxConfig_PushSection("Level2WinLoseCond")){
+                    time_lose = orxConfig_GetS32("Time");
+                    time_left = time_lose;
+                    score_win = orxConfig_GetS32("Points");
+                    orxConfig_PopSection();
+                }
+                orxLOG("Level 2 geladen");
+                break;
+            case 2:  // no level3
+                level = orxObject_CreateFromConfig("Level1");
+                level_no = 1;
+                if (orxConfig_PushSection("Level1WinLoseCond")){
+                    time_lose = orxConfig_GetS32("Time");
+                    time_left = time_lose;
+                    score_win = orxConfig_GetS32("Points");
+                    orxConfig_PopSection();
+                }
+                orxLOG("Level 1 geladen");
+                break;
         }
-        orxLOG("Level 1 geladen");
 
         scoreObject = orxObject_CreateFromConfig("ScoreTextObject");
 
         // Create the player
         player = new Player(orxObject_CreateFromConfig("PlayerObject"), 30, -30);
-        //orxObject_CreateFromConfig("SheepObject");
 
         orxCLOCK* clockTimer = orxClock_Create(0.9, orxCLOCK_TYPE_USER);
         clockObject = orxObject_CreateFromConfig("ClockObject");
