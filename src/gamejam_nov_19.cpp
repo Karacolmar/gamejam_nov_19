@@ -22,7 +22,7 @@
 
 
 
-int gamestate = 1;
+int gamestate = 0;
 int level_no = 0;
 
 Player *player = NULL;
