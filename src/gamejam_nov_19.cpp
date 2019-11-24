@@ -7,6 +7,7 @@
 #include "Player.h"
 #include <iostream>
 #include <string>
+#include <unistd.h>
 
 #define STATE_MENU 0
 #define STATE_PLAYING 1
@@ -18,14 +19,13 @@
 int gamestate = 1;
 
 Player *player = NULL;
-orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject, *clockObject;
+orxOBJECT *gameover, *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject, *clockObject;
 
 orxS16 score = 0;
 orxS32 score_win;
 orxS16 time_left;
 orxS32 time_lose;
 
-orxOBOX boundingBox;
 
 void orxFASTCALL updateTimer(const orxCLOCK_INFO *info, void *object){
     if (gamestate == STATE_PLAYING){
@@ -102,6 +102,14 @@ void startOptions()
 
 }
 
+void starteGameOver()
+{
+    //usleep(5000000);
+    //gamestate = STATE_MENU;    
+    //orxObject_SetLifeTime(gameover, orxFLOAT_0);
+
+}
+
 void starteIntro()
 {
     if(gamestate == STATE_INTRO)
@@ -173,7 +181,9 @@ orxSTATUS orxFASTCALL Init()
             break;
         case STATE_INTRO:
             break;
-        //case STATE_GAME_OVER:
+        case STATE_GAME_OVER:
+            starteGameOver();
+            break;
         //default:  
     }
     
@@ -188,7 +198,7 @@ void handleLevelInput()
 {
     orxVECTOR player_movement = {0, 0, 0};
     if(orxInput_IsActive("GoLeft")){
-       // orxSound_Play(pstMusic);
+
         if(orxInput_HasNewStatus("GoLeft"))
         {
             orxObject_AddSound(level, "grass1");
@@ -354,7 +364,9 @@ orxSTATUS orxFASTCALL Run()
             handleLevelInput();
             checkOver();
             break;
-        //case STATE_GAME_OVER:
+        case STATE_GAME_OVER:
+            starteGameOver();
+            break;
         //default: orxLOG("default"); 
     }
 
