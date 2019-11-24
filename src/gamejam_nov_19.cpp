@@ -273,6 +273,7 @@ void checkOver(bool force_win=false){
             }
             else {
                 gamestate = STATE_GAME_OVER;
+                level_no = 0;
                 startGameOver();
             }
 
