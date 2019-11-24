@@ -18,15 +18,18 @@
 int gamestate = 1;
 
 Player *player = NULL;
-orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1, *intro, *scoreObject;
+orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject;
 
 orxS16 score = 0;
+orxS32 score_win = 0;
+orxS16 time_passed = 0;
+orxS32 time_lose = 0;
 
 orxOBOX boundingBox;
 
 void orxFASTCALL updateTimer(const orxCLOCK_INFO *info, void *object){
     orxCHAR timerStr[5];
-    orxS16 time_passed = orxMath_Floor(info->fTime);
+    time_passed = orxMath_Floor(info->fTime);
     orxS16 minutes = orxMath_Floor(time_passed/60);
     orxS16 seconds = time_passed%60;
 
@@ -65,8 +68,13 @@ void startGame()
         orxViewport_CreateFromConfig("Viewport");
         
         // Create Level
-        level1 = orxObject_CreateFromConfig("Level1");
-        orxLOG("Level geladen");
+        level = orxObject_CreateFromConfig("Level1");
+        if (orxConfig_PushSection("Level1WinLoseCond")){
+            time_lose = orxConfig_GetS32("Time");
+            score_win = orxConfig_GetS32("Points");
+            orxConfig_PopSection();
+        }
+        orxLOG("Level 1 geladen");
 
         scoreObject = orxObject_CreateFromConfig("ScoreTextObject");
 
@@ -179,7 +187,7 @@ void handleLevelInput()
        // orxSound_Play(pstMusic);
         if(orxInput_HasNewStatus("GoLeft"))
         {
-            orxObject_AddSound(level1, "grass1");
+            orxObject_AddSound(level, "grass1");
         }
         
         player_movement = player->get_left();
@@ -188,7 +196,7 @@ void handleLevelInput()
     if(orxInput_IsActive("GoRight")){
         if(orxInput_HasNewStatus("GoRight"))
         {
-            orxObject_AddSound(level1, "grass1");
+            orxObject_AddSound(level, "grass1");
         }
         player_movement = player->get_right();
         // player->move('R');
@@ -196,7 +204,7 @@ void handleLevelInput()
     if(orxInput_IsActive("GoUp")){
         if(orxInput_HasNewStatus("GoUp"))
         {
-            orxObject_AddSound(level1, "grass1");
+            orxObject_AddSound(level, "grass1");
         }
         player_movement = player->get_up();
         // player->move('U');
@@ -204,7 +212,7 @@ void handleLevelInput()
     if(orxInput_IsActive("GoDown")){
         if(orxInput_HasNewStatus("GoDown"))
         {
-            orxObject_AddSound(level1, "grass1");
+            orxObject_AddSound(level, "grass1");
         }
         player_movement = player->get_down();
         // player->move('D');
@@ -284,6 +292,16 @@ void handleMenuInput()
 
 }
 
+void checkOver(){
+    if (time_passed >= time_lose){
+        orxObject_AddTimeLineTrack(level, "PopUpGameOverTrack");
+    }
+
+    else if (score >= score_win){
+        orxObject_AddTimeLineTrack(level, "PopUpGameOverTrack");
+    }
+}
+
 
 /** Run function, it is called every clock cycle
  */
@@ -308,6 +326,7 @@ orxSTATUS orxFASTCALL Run()
         //case STATE_OPTIONS:
         case STATE_PLAYING: 
             handleLevelInput();
+            checkOver();
             break;
         //case STATE_GAME_OVER:
         //default: orxLOG("default"); 
