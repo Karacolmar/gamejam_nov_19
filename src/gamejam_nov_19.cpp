@@ -18,24 +18,27 @@
 int gamestate = 1;
 
 Player *player = NULL;
-orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject;
+orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject, *clockObject;
 
 orxS16 score = 0;
-orxS32 score_win = 0;
-orxS16 time_passed = 0;
-orxS32 time_lose = 0;
+orxS32 score_win;
+orxS16 time_left;
+orxS32 time_lose;
 
 orxOBOX boundingBox;
 
 void orxFASTCALL updateTimer(const orxCLOCK_INFO *info, void *object){
-    orxCHAR timerStr[5];
-    time_passed = orxMath_Floor(info->fTime);
-    orxS16 minutes = orxMath_Floor(time_passed/60);
-    orxS16 seconds = time_passed%60;
+    if (gamestate == STATE_PLAYING){
+        orxCHAR timerStr[5];
+        orxS16 time_passed = orxMath_Floor(info->fTime);
+        time_left = time_lose - time_passed;
+        orxS16 minutes = orxMath_Floor(time_left/60);
+        orxS16 seconds = time_left%60;
 
-    orxString_Print(timerStr, "%02d:%02d", minutes, seconds);
+        orxString_Print(timerStr, "%02d:%02d", minutes, seconds);
 
-    orxObject_SetTextString((orxOBJECT*)object, timerStr);
+        orxObject_SetTextString((orxOBJECT*)object, timerStr);
+    }
 }
 
 void startMenu()
@@ -71,6 +74,7 @@ void startGame()
         level = orxObject_CreateFromConfig("Level1");
         if (orxConfig_PushSection("Level1WinLoseCond")){
             time_lose = orxConfig_GetS32("Time");
+            time_left = time_lose;
             score_win = orxConfig_GetS32("Points");
             orxConfig_PopSection();
         }
@@ -83,7 +87,7 @@ void startGame()
         //orxObject_CreateFromConfig("SheepObject");
 
         orxCLOCK* clockTimer = orxClock_Create(0.9, orxCLOCK_TYPE_USER);
-        orxOBJECT* clockObject = orxObject_CreateFromConfig("ClockObject");
+        clockObject = orxObject_CreateFromConfig("ClockObject");
         orxClock_Register(clockTimer, updateTimer, clockObject, orxMODULE_ID_MAIN, orxCLOCK_PRIORITY_NORMAL);   
     }
 
@@ -291,18 +295,36 @@ void handleMenuInput()
 }
 
 void checkOver(){
-    if (time_passed >= time_lose){
-        orxObject_CreateFromConfig("Gameover");
-        orxObject_SetLifeTime(level, orxFLOAT_0);
-        orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
-        gamestate = STATE_GAME_OVER;
-    }
+    if (time_left){
+        if (time_left <= 1){
+            orxObject_CreateFromConfig("Gameover");
+            orxObject_SetLifeTime(level, orxFLOAT_0);
+            orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
+            orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
+            orxObject_SetLifeTime(clockObject, orxFLOAT_0);
+            gamestate = STATE_GAME_OVER;
+        }
 
-    else if (score >= score_win){
-        orxObject_CreateFromConfig("winscreen");
-        orxObject_SetLifeTime(level, orxFLOAT_0);
-        orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
-        gamestate = STATE_GAME_OVER;
+        else if (score >= score_win){
+            orxObject_CreateFromConfig("Winscreen");
+            orxObject_SetLifeTime(level, orxFLOAT_0);
+            orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
+            orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
+            orxObject_SetLifeTime(clockObject, orxFLOAT_0);
+            gamestate = STATE_GAME_OVER;
+        }
+
+        else if (time_left <= 10){
+            orxVECTOR vec;
+            vec.fX = 1.0;
+            vec.fY = 0;
+            vec.fZ = 0;
+    
+            orxCOLOR colour;
+            colour.vRGB = vec;
+            colour.fAlpha = orxFLOAT_1; //set alpha required to stop your object from becoming fully transparent.
+            orxObject_SetColor(clockObject, &colour);
+        }
     }
 }
 
