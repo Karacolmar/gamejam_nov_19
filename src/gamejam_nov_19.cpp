@@ -15,7 +15,7 @@
 #define STATE_CREDITS 4
 #define STATE_INTRO 5
 
-int gamestate = 0;
+int gamestate = 1;
 
 Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1, *intro, *scoreObject;
@@ -25,7 +25,6 @@ orxS16 score = 0;
 orxOBOX boundingBox;
 
 void orxFASTCALL updateTimer(const orxCLOCK_INFO *info, void *object){
-    orxLOG("they called me!");
     orxCHAR timerStr[5];
     orxS16 time_passed = orxMath_Floor(info->fTime);
     orxS16 minutes = orxMath_Floor(time_passed/60);
