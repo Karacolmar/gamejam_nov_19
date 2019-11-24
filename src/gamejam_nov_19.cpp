@@ -18,6 +18,7 @@
 #define STATE_INTRO2 6
 #define STATE_INTRO3 7
 #define STATE_INTRO4 8
+#define STATE_INTRO5 9
 
 
 
@@ -152,17 +153,35 @@ void startWinScreen()
 
 void startIntro()
 {
+    // Create the viewport
+    orxViewport_CreateFromConfig("Viewport");
     if(gamestate == STATE_INTRO)
     {
-        // Create the viewport
-        orxViewport_CreateFromConfig("Viewport");
-        
-        // Create Level
         intro = orxObject_CreateFromConfig("Intro");
         orxLOG("Intro geladen");
-
-        playButton = orxObject_GetOwnedChild(intro);
     }
+    else if(gamestate == STATE_INTRO2)
+    {
+        intro = orxObject_CreateFromConfig("Intro2");
+        orxLOG("Intro2 geladen");
+    }
+    else if(gamestate == STATE_INTRO3)
+    {
+        intro = orxObject_CreateFromConfig("Intro3");
+        orxLOG("Intro3 geladen");
+    }
+    else if(gamestate == STATE_INTRO4)
+    {
+        intro = orxObject_CreateFromConfig("Intro4");
+        orxLOG("Intro4 geladen");
+    }
+    else if(gamestate == STATE_INTRO5)
+    {
+        intro = orxObject_CreateFromConfig("Intro5");
+        orxLOG("Intro5 geladen");
+    }
+    else
+    {}
 }
         
 void updateScore(int increase){
@@ -287,12 +306,21 @@ void handleIntroInput()
 {
     if (orxInput_IsActive("Space") && orxInput_HasNewStatus("Space"))
     {
-        //Continue
-        orxLOG("Spacebar!");
-        orxObject_SetLifeTime(intro, orxFLOAT_0);
-        gamestate = STATE_PLAYING;
-        startGame();
-        
+        if(gamestate <10)
+        {
+            //Continue
+            orxLOG("Spacebar!");
+            orxObject_SetLifeTime(intro, orxFLOAT_0);
+            gamestate++;
+            startIntro();
+        }
+        else
+        {
+            orxLOG("Spacebar!");
+            orxObject_SetLifeTime(intro, orxFLOAT_0);
+            gamestate == STATE_PLAYING;
+            startGame();    
+        }    
     }
 }
 
