@@ -368,6 +368,27 @@ void handleGameoverInput()
     }
 }
 
+void handleWinInput()
+{
+    if (orxInput_IsActive("Space") && orxInput_HasNewStatus("Space"))
+    {
+        //Continue
+        orxLOG("Spacebar!");
+        orxObject_SetLifeTime(gameover, orxFLOAT_0);
+        gamestate = STATE_PLAYING;
+        startGame();
+        
+    }
+
+    else if (orxInput_IsActive("Enter") && orxInput_HasNewStatus("Enter"))
+    {
+        orxLOG("Enter key - back to menu!");
+        orxObject_SetLifeTime(gameover, orxFLOAT_0);
+        gamestate = STATE_MENU;
+        startMenu();
+    }
+}
+
 void checkOver(){
     if (time_left){
         if (time_left <= 0){
@@ -431,7 +452,7 @@ orxSTATUS orxFASTCALL Run()
             handleGameoverInput();
             break;
         case STATE_WIN:
-            handleGameoverInput(); // WIn und Gameover haben gleichen Input / Logik
+            handleWinInput();
             break;
         case STATE_INTRO:
             handleIntroInput();
