@@ -27,8 +27,9 @@ int level_no = 0;
 
 Player *player = NULL;
 orxOBJECT *gameover, *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject, *clockObject;
+orxCLOCK* clockTimer;
 
-orxS16 score = 0;
+orxS16 score;
 orxS32 score_win;
 orxS16 time_left;
 orxS32 time_lose;
@@ -86,6 +87,7 @@ void startGame()
                 if (orxConfig_PushSection("Level1WinLoseCond")){
                     time_lose = orxConfig_GetS32("Time");
                     time_left = time_lose;
+                    score = 0;
                     score_win = orxConfig_GetS32("Points");
                     orxConfig_PopSection();
                 }
@@ -120,7 +122,7 @@ void startGame()
         // Create the player
         player = new Player(orxObject_CreateFromConfig("PlayerObject"), 30, -30);
 
-        orxCLOCK* clockTimer = orxClock_Create(0.9, orxCLOCK_TYPE_USER);
+        clockTimer = orxClock_Create(0.9, orxCLOCK_TYPE_USER);
         clockObject = orxObject_CreateFromConfig("ClockObject");
         orxClock_Register(clockTimer, updateTimer, clockObject, orxMODULE_ID_MAIN, orxCLOCK_PRIORITY_NORMAL);   
     
@@ -266,9 +268,11 @@ void checkOver(bool force_win=false){
         if (time_left <= 0 || force_win){
             
             orxObject_SetLifeTime(level, orxFLOAT_0);
+            orxObject_Delete(level);  // doesn't throw an error so... i guess we should do this?
             orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
             orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
             orxObject_SetLifeTime(clockObject, orxFLOAT_0);
+            orxClock_Delete(clockTimer);
             
             if (score >= score_win || force_win){
                 gamestate = STATE_WIN;
