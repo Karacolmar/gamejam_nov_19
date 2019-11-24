@@ -15,7 +15,7 @@
 #define STATE_CREDITS 4
 #define STATE_INTRO 5
 
-int gamestate = 1;
+int gamestate = 0;
 
 Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject;
