@@ -23,7 +23,7 @@
 
 
 int gamestate = 0;
-int level_no = 1;
+int level_no = 0;
 
 Player *player = NULL;
 orxOBJECT *gameover, *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject, *clockObject;
@@ -204,10 +204,10 @@ orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
         // retrieve body part names from collision events
         orxPHYSICS_EVENT_PAYLOAD* payload = (orxPHYSICS_EVENT_PAYLOAD*)_pstEvent->pstPayload; 
         orxLOG("Recipient %s | Sender: %s", payload->zRecipientPartName, payload->zSenderPartName);
-    
+        */
+
         pstSenderObject = orxOBJECT(_pstEvent->hSender);
         pstRecipientObject = orxOBJECT(_pstEvent->hRecipient);
-        */
     
         orxSTRING senderObjectName = (orxSTRING)orxObject_GetName(pstSenderObject);
         orxSTRING recipientObjectName = (orxSTRING)orxObject_GetName(pstRecipientObject);
