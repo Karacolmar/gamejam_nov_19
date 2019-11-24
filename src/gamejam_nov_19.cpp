@@ -152,12 +152,12 @@ orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
                 orxObject_SetSpeed(pstSenderObject, &stop);
                 orxObject_SetSpeed(pstRecipientObject, &stop);
         }
-        if ((orxString_Compare(senderObjectName, "SheepObject") == 0) && (orxString_SearchString(recipientObjectName, "GateObject"))){
+        if ((orxString_Compare(senderObjectName, "SheepObject") == 0) && (orxString_SearchString(recipientObjectName, "GateBodyObject"))){
             orxObject_SetLifeTime(pstSenderObject, orxFLOAT_0);
             updateScore(10);
         }
 
-        if ((orxString_SearchString(senderObjectName, "GateObject")) && (orxString_Compare(recipientObjectName, "SheepObject") == 0)){
+        if ((orxString_SearchString(senderObjectName, "GateBodyObject")) && (orxString_Compare(recipientObjectName, "SheepObject") == 0)){
             orxObject_SetLifeTime(pstRecipientObject, orxFLOAT_0);
             updateScore(10);
         }
@@ -309,17 +309,13 @@ void handleMenuInput()
 
 void checkOver(){
     if (time_left){
-        if (time_left <= 1){
-            orxObject_CreateFromConfig("Gameover");
-            orxObject_SetLifeTime(level, orxFLOAT_0);
-            orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
-            orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
-            orxObject_SetLifeTime(clockObject, orxFLOAT_0);
-            gamestate = STATE_GAME_OVER;
-        }
-
-        else if (score >= score_win){
-            orxObject_CreateFromConfig("Winscreen");
+        if (time_left <= 0){
+            if (score >= score_win){
+                orxObject_CreateFromConfig("Winscreen");
+            }
+            else {
+                orxObject_CreateFromConfig("Gameover");
+            }
             orxObject_SetLifeTime(level, orxFLOAT_0);
             orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
             orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
