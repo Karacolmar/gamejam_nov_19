@@ -22,7 +22,7 @@
 
 
 
-int gamestate = 0;
+int gamestate = 1;
 int level_no = 0;
 
 Player *player = NULL;
@@ -258,6 +258,39 @@ orxSTATUS orxFASTCALL Init()
     return orxSTATUS_SUCCESS;
 }
 
+void checkOver(bool force_win=false){
+    if (time_left){
+        if (time_left <= 0 || force_win){
+            
+            orxObject_SetLifeTime(level, orxFLOAT_0);
+            orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
+            orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
+            orxObject_SetLifeTime(clockObject, orxFLOAT_0);
+            
+            if (score >= score_win || force_win){
+                gamestate = STATE_WIN;
+                startWinScreen();
+            }
+            else {
+                gamestate = STATE_GAME_OVER;
+                startGameOver();
+            }
+
+        }
+
+        else if (time_left <= 10){
+            orxVECTOR vec;
+            vec.fX = 1.0;
+            vec.fY = 0;
+            vec.fZ = 0;
+    
+            orxCOLOR colour;
+            colour.vRGB = vec;
+            colour.fAlpha = orxFLOAT_1; //set alpha required to stop your object from becoming fully transparent.
+            orxObject_SetColor(clockObject, &colour);
+        }
+    }
+}
 
 
 void handleLevelInput()
@@ -296,6 +329,12 @@ void handleLevelInput()
         }
         player_movement = player->get_down();
         // player->move('D');
+    }
+
+    // win immediately (for presentation and debugging)
+    if(orxInput_IsActive("CheatWin")){
+        orxLOG("winning mode activated");
+        checkOver(true);
     }
 
     
@@ -414,40 +453,6 @@ void handleWinInput()
         orxObject_SetLifeTime(gameover, orxFLOAT_0);
         gamestate = STATE_MENU;
         startMenu();
-    }
-}
-
-void checkOver(){
-    if (time_left){
-        if (time_left <= 0){
-            
-            orxObject_SetLifeTime(level, orxFLOAT_0);
-            orxObject_SetLifeTime(player->get_object(), orxFLOAT_0);
-            orxObject_SetLifeTime(scoreObject, orxFLOAT_0);
-            orxObject_SetLifeTime(clockObject, orxFLOAT_0);
-            
-            if (score >= score_win){
-                gamestate = STATE_WIN;
-                startWinScreen();
-            }
-            else {
-                gamestate = STATE_GAME_OVER;
-                startGameOver();
-            }
-
-        }
-
-        else if (time_left <= 10){
-            orxVECTOR vec;
-            vec.fX = 1.0;
-            vec.fY = 0;
-            vec.fZ = 0;
-    
-            orxCOLOR colour;
-            colour.vRGB = vec;
-            colour.fAlpha = orxFLOAT_1; //set alpha required to stop your object from becoming fully transparent.
-            orxObject_SetColor(clockObject, &colour);
-        }
     }
 }
 
