@@ -6,6 +6,7 @@
 #include "orx.h"
 #include "Player.h"
 #include <iostream>
+#include <string>
 
 #define STATE_MENU 0
 #define STATE_PLAYING 1
@@ -14,7 +15,7 @@
 #define STATE_CREDITS 4
 #define STATE_INTRO 5
 
-int gamestate = 1;
+int gamestate = 0;
 
 Player *player = NULL;
 orxOBJECT *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level1, *intro, *scoreObject;
@@ -145,9 +146,6 @@ orxSTATUS orxFASTCALL PhysicsEventHandler(const orxEVENT *_pstEvent)
     return orxSTATUS_SUCCESS;
 }
 
-/*
- * This is a basic code template to quickly and easily get started with a project or tutorial.
- */
 
 /** Init function, it is called when all orx's modules have been initialized
  */
@@ -161,6 +159,8 @@ orxSTATUS orxFASTCALL Init()
         //case STATE_OPTIONS:
         case STATE_PLAYING: 
             startGame();
+            break;
+        case STATE_INTRO:
             break;
         //case STATE_GAME_OVER:
         //default:  
@@ -177,21 +177,41 @@ void handleLevelInput()
 {
     orxVECTOR player_movement = {0, 0, 0};
     if(orxInput_IsActive("GoLeft")){
+       // orxSound_Play(pstMusic);
+        if(orxInput_HasNewStatus("GoLeft"))
+        {
+            orxObject_AddSound(level1, "grass1");
+        }
+        
         player_movement = player->get_left();
         // player->move('L');
     }
     if(orxInput_IsActive("GoRight")){
+        if(orxInput_HasNewStatus("GoRight"))
+        {
+            orxObject_AddSound(level1, "grass1");
+        }
         player_movement = player->get_right();
         // player->move('R');
     }
     if(orxInput_IsActive("GoUp")){
+        if(orxInput_HasNewStatus("GoUp"))
+        {
+            orxObject_AddSound(level1, "grass1");
+        }
         player_movement = player->get_up();
         // player->move('U');
     }
     if(orxInput_IsActive("GoDown")){
+        if(orxInput_HasNewStatus("GoDown"))
+        {
+            orxObject_AddSound(level1, "grass1");
+        }
         player_movement = player->get_down();
         // player->move('D');
     }
+
+    
     orxObject_ApplyImpulse(player->get_object(), &player_movement, orxNULL);
 }
 
@@ -232,6 +252,7 @@ void handleMenuInput()
             {
                 //INSERT SOME CODE THAT STARTS YOUR GAME
                 orxLOG("PlayButton geklcikt");
+                orxObject_AddSound(menu, "StartSound");
                 gamestate = 1;
                 startGame();
             }
@@ -248,6 +269,7 @@ void handleMenuInput()
                 // Should quit?
                 if(orxInput_IsActive("Quit"))
                 {
+                    orxObject_AddSound(menu, "ExitSound");
                     // Update result
                     eResult = orxSTATUS_FAILURE;
                 }
@@ -273,6 +295,7 @@ orxSTATUS orxFASTCALL Run()
     if(orxInput_IsActive("Quit"))
     {
         // Update result
+        orxObject_AddSound(menu, "ExitSound");
         eResult = orxSTATUS_FAILURE;
     }
     
