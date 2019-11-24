@@ -16,7 +16,7 @@
 #define STATE_CREDITS 4
 #define STATE_INTRO 5
 
-int gamestate = 5;
+int gamestate = 0;
 
 Player *player = NULL;
 orxOBJECT *gameover, *menu, *exitButton, *optionenButton, *creditsButton, *playButton, *level, *intro, *scoreObject, *clockObject;
@@ -102,15 +102,18 @@ void startOptions()
 
 }
 
-void starteGameOver()
+void startGameOver()
 {
-    //usleep(5000000);
-    //gamestate = STATE_MENU;    
-    //orxObject_SetLifeTime(gameover, orxFLOAT_0);
+    if(gamestate == STATE_GAME_OVER)
+    {
+        //usleep(5000000);
+        //gamestate = STATE_MENU;    
+        //orxObject_SetLifeTime(gameover, orxFLOAT_0);
+    }
 
 }
 
-void starteIntro()
+void startIntro()
 {
     if(gamestate == STATE_INTRO)
     {
@@ -121,7 +124,7 @@ void starteIntro()
         intro = orxObject_CreateFromConfig("Intro");
         orxLOG("Intro geladen");
 
-        //playButton = orxObject_GetOwnedChild(intro);
+        playButton = orxObject_GetOwnedChild(intro);
     }
 }
         
@@ -180,10 +183,10 @@ orxSTATUS orxFASTCALL Init()
             startGame();
             break;
         case STATE_INTRO:
-            starteIntro();
+            startIntro();
             break;
         case STATE_GAME_OVER:
-            starteGameOver();
+            startGameOver();
             break;
         //default:  
     }
@@ -245,6 +248,7 @@ void handleIntroInput()
         orxLOG("Spacebar!");
         orxObject_SetLifeTime(intro, orxFLOAT_0);
         gamestate = STATE_PLAYING;
+        startGame();
         
     }
 }
@@ -277,8 +281,9 @@ void handleMenuInput()
                 //INSERT SOME CODE THAT STARTS YOUR GAME
                 orxLOG("PlayButton geklcikt");
                 orxObject_AddSound(menu, "StartSound");
-                gamestate = 1;
-                startGame();
+                orxObject_SetLifeTime(menu, orxFLOAT_0);
+                gamestate = STATE_INTRO;
+                startIntro();
             }
             else if(orxString_Compare(orxObject_GetName(object),"GearObject") == 0)
             {
@@ -364,7 +369,10 @@ orxSTATUS orxFASTCALL Run()
             checkOver();
             break;
         case STATE_GAME_OVER:
-            starteGameOver();
+            startGameOver();
+            break;
+        case STATE_INTRO:
+            handleIntroInput();
             break;
         //default: orxLOG("default"); 
     }
